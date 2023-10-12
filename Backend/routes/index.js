@@ -6,4 +6,3 @@ const router = express.Router();
 router.use("/succurcal", Succurcal);
 
 export default router;
-
