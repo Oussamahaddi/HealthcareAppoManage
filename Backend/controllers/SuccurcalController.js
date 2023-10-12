@@ -8,8 +8,18 @@ import asynchandler from "express-async-handler";
  */
 
 const getAllSuccurcal = asynchandler(async (req, res) => {
-    const Succurcals = await SuccurcalModel.findAll();
-    res.status(200).json(Succurcals);
+    console.log("Get all succurcal");
+    // const Succurcals = await SuccurcalModel.findAll();
+    // res.status(200).json(Succurcals);
+});
+const saveSuccurcal = asynchandler(async (req, res) => {
+    console.log("save succurcal");
+});
+const updateSuccurcal = asynchandler(async (req, res) => {
+    console.log("update succurcal");
+});
+const deleteSuccurcal = asynchandler(async (req, res) => {
+    console.log("delete succurcal");
 });
 
-export { getAllSuccurcal };
+export { getAllSuccurcal, saveSuccurcal, updateSuccurcal, deleteSuccurcal };
