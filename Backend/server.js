@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 
 // imported routes
-import SuccurcalRoutes from "./routes/SuccurcalRoutes.js";
+import router from "./routes/index.js";
 
 dotenv.config();
 
@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // use routes
-app.use("/Succurcal", SuccurcalRoutes);
+app.use("/", router);
 
 // listen to server
 app.listen(port, function () {
