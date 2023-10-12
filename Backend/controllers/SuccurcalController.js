@@ -9,6 +9,7 @@ import asynchandler from "express-async-handler";
 
 const getAllSuccurcal = asynchandler(async (req, res) => {
     console.log("Get all succurcal");
+    res.send("hello ismail")
     // const Succurcals = await SuccurcalModel.findAll();
     // res.status(200).json(Succurcals);
 });
