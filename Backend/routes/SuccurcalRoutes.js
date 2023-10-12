@@ -1,6 +1,11 @@
 import { Router } from "express";
 
-import { getAllSuccurcal, saveSuccurcal, updateSuccurcal, deleteSuccurcal } from "../controllers/SuccurcalController.js";
+import { 
+    getAllSuccurcal, 
+    saveSuccurcal, 
+    updateSuccurcal, 
+    deleteSuccurcal 
+} from "../controllers/SuccurcalController.js";
 
 const router = Router();
 
