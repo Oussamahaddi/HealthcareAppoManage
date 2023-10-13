@@ -1,2 +1,3 @@
-export { default as SuccurcalModel } from "./SuccurcalModel.js";
-export { default as ServicesModel } from "./ServiceModel.js";
+export * from "./SuccurcalModel.js";
+export * from "./ServiceModel.js";
+export * from "./UserModel.js"
