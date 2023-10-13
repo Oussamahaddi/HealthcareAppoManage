@@ -16,6 +16,9 @@
     "author": "Redouane khlifah , Oussama Haddi , Abdeslam hannouni ,Houssni ismail , İkram mahfoud",
     "license": "ISC",
     "devDependencies": {
+        "@babel/core": "^7.23.2",
+        "@babel/node": "^7.22.19",
+        "@babel/preset-env": "^7.23.2",
         "concurrently": "^8.2.1",
         "eslint": "^8.51.0",
         "eslint-config-standard": "^17.1.0",

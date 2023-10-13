@@ -1,7 +1,7 @@
 import sequelize from "./sequelize.js";
 
 // Define your models
-import "../models/SuccurcalModel.js";
+import { SuccurcalModel, ServicesModel } from "../models/Index.js";
 
 // async database tables
 async function recreateTables() {

@@ -4,7 +4,7 @@ import {
     getAllSuccurcal,
     getOneSuccurcal,
     CreateSuccurcal,
-    UpdateSuccurcals,
+    UpdateSuccurcal,
     DeleteSuccurcal
 } from "../providers/SuccurcalProvider.js";
 
@@ -12,7 +12,7 @@ const router = Router();
 
 /**
  * @GET
- * @desc // get all Succurcal
+ * @desc // get all Succurcals
  * @access public
  */
 router.get("/", getAllSuccurcal);
@@ -36,7 +36,7 @@ router.post("/", CreateSuccurcal);
  * @desc // update a Succurcal
  * @access private
  */
-router.patch("/:id", UpdateSuccurcals);
+router.patch("/:id", UpdateSuccurcal);
 
 /**
  * @DELETE
