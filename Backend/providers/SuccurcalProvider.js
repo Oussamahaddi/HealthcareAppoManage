@@ -1,8 +1,6 @@
 import SuccurcalModel from "../models/SuccurcalModel.js";
 import asynchandler from "express-async-handler";
-import { Succurcalschema, validateschema } from "../validators/JoiSchemas.js";
-
-// joi Scheama
+import { SuccurcalSchema, validateschema } from "../validators/JoiSchemas.js";
 
 /**
  * @desc Get all Succurcal
@@ -34,7 +32,7 @@ const getOneSuccurcal = asynchandler(async (req, res) => {
  */
 
 const CreateSuccurcal = asynchandler(async (req, res) => {
-    const error = validateschema(Succurcalschema, req.body);
+    const error = validateschema(SuccurcalSchema, req.body);
 
     if (error) {
         return res.status(400).json({ error: error });
@@ -56,8 +54,8 @@ const CreateSuccurcal = asynchandler(async (req, res) => {
  * @access private
  */
 
-const UpdateSuccurcals = asynchandler(async (req, res) => {
-    const error = validateschema(Succurcalschema, req.body);
+const UpdateSuccurcal = asynchandler(async (req, res) => {
+    const error = validateschema(SuccurcalSchema, req.body);
 
     if (error) {
         return res.status(400).json({ error: error });
@@ -95,7 +93,7 @@ const DeleteSuccurcal = asynchandler(async (req, res) => {
 
     // Check if the Succurcal exists
     const existingSuccurcal = await SuccurcalModel.findByPk(id);
-     // check if Succurcals existes
+    // check if Succurcals existes
     if (!existingSuccurcal) {
         return res.status(404).json({ error: "Succurcal not found" });
     }
@@ -110,6 +108,6 @@ export {
     getAllSuccurcal,
     getOneSuccurcal,
     CreateSuccurcal,
-    UpdateSuccurcals,
+    UpdateSuccurcal,
     DeleteSuccurcal
 };

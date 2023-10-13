@@ -10,14 +10,30 @@ const customErrorMessages = {
     "string.empty": "the {#label} Field cannot be empty"
 };
 
-//  schema for validating the request body when creating and updating a Succurcal
-const Succurcalschema = Joi.object({
+//  schemas for validating the request body when creating and updating a Succurcal
+/**
+ * @HELPER
+ * @type object
+ * @desc schemas for validating the request body when creating and updating
+ *
+ **/
+const SuccurcalSchema = Joi.object({
     title: Joi.string().required().messages(customErrorMessages),
     description: Joi.string().required().messages(customErrorMessages)
 });
 
-// function validate sheama either return message or null
-// takes two parameter schema and req.body object
+const ServiceSchema = Joi.object({
+    title: Joi.string().required().messages(customErrorMessages),
+    description: Joi.string().required().messages(customErrorMessages)
+});
+
+/**
+ * @HELPER
+ * @type functions
+ * @params schema , req.body object
+ * @desc function validate sheama either return message or null , takes two parameter schema and req.body object
+ *
+ **/
 
 const validateschema = (schema, data) => {
     const { error } = schema.validate(data);
@@ -29,4 +45,4 @@ const validateschema = (schema, data) => {
     return null; // Return null if validation is successful
 };
 
-export { Succurcalschema, validateschema };
+export { SuccurcalSchema, ServiceSchema, validateschema };

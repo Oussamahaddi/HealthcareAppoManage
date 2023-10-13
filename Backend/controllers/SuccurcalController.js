@@ -7,9 +7,5 @@ import asynchandler from "express-async-handler";
  * @access public
  */
 
-// const getAllSuccurcal = asynchandler(async (req, res) => {
-//     const Succurcals = await SuccurcalModel.findAll();
-//     res.status(200).json(Succurcals);
-// });
-
 export {};
+
