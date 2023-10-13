@@ -1,19 +1,17 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
+import UserModel from "./UserModel.js";
 
 
-const AdminModel = sequelize.define('admin',{
+const AdminModel = sequelize.define('admin', {
     id: {
         type: DataTypes.INTEGER,
-        primaryKey : true,
-        autoIncrement : true
+        primaryKey: true,
+        autoIncrement: true
     },
-    first_name : DataTypes.STRING,
-    last_name : DataTypes.STRING,
-    email : DataTypes.STRING,
-    password : DataTypes.STRING,
-    profile_image : DataTypes.STRING,
-    role : DataTypes.ENUM("admin")
 });
-
+AdminModel.belongsTo(UserModel, {
+    foreignKey: 'userId',
+    onDelete: 'CASCADE',
+})
 export default AdminModel;

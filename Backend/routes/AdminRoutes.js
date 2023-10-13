@@ -5,17 +5,17 @@ import {getAllAdmin,finAdmin,addAdmin,deleteAdmin,updateAdmin} from "../controll
 const router = Router();
 
 /**
- * @get
+ * @GET
  * @desc // get all articals
  * @access public
  */
 
 
 router.get('/',getAllAdmin)
-router.get('/find/id',finAdmin)
-router.post('/add',addAdmin)
-router.post('/delete/id',deleteAdmin)
-router.post('/update/id',updateAdmin)
+router.get('/find/:id',finAdmin)
+router.post('/create',addAdmin)
+router.post('/update/:id',updateAdmin)
+router.post('/delete/:id',deleteAdmin)
 
 
 export default router;
