@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import {getAllAdmin,finAdmin,addAdmin,deleteAdmin,updateAdmin} from "../controllers/AdminController.js";
+import {getAllAdmin,finAdmin,addAdmin,deleteAdmin,updateAdmin} from "../providers/AdminProvider.js";
 
 const router = Router();
 
@@ -12,6 +12,7 @@ const router = Router();
 
 
 router.get('/',getAllAdmin)
+
 router.get('/find/:id',finAdmin)
 router.post('/create',addAdmin)
 router.post('/update/:id',updateAdmin)

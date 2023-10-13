@@ -1,16 +1,16 @@
 import expressAsyncHandler from "express-async-handler";
-import AdminModel from "../models/AdminModel";
+import AdminModel from "../models/AdminModel.js";
 import Joi from "joi"
 
 /**
  * @desc Get all admins
- * @route GET /admin
+ * @route GET /Admin
  * @access private
  */
 const getAllAdmin = expressAsyncHandler(async (req, res) => {
     const Admins = await AdminModel.findAll();
     res.status(200).json(Admins);
-
+    res.json({status:true})
 })
 
 const finAdmin = expressAsyncHandler(async (req, res) => {
@@ -43,7 +43,6 @@ const addAdmin = expressAsyncHandler(async (req, res) => {
 })
 
 const deleteAdmin = expressAsyncHandler(async (req, res) => {
-
     res.json({ status: 'admin is deleted' })
 })
 
