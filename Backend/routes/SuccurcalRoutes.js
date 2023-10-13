@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+
 import {
     getAllSuccurcal,
     getOneSuccurcal,
@@ -9,13 +10,6 @@ import {
 } from "../providers/SuccurcalProvider.js";
 
 const router = Router();
-
-/**
- * @GET
- * @desc // get all Succurcal
- * @access public
- */
-router.get("/", getAllSuccurcal);
 
 /**
  * @GET
