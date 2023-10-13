@@ -10,7 +10,6 @@ const sequelize = new Sequelize({
     username: process.env.user,
     password: process.env.password,
     database: process.env.database,
-    connectionLimit: process.env.connectionLimit
 });
 
 export default sequelize;

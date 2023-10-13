@@ -1,5 +1,5 @@
-import express  from "express"
-import Succurcal from "./SuccurcalRoutes.js"
+import express from "express";
+import Succurcal from "./SuccurcalRoutes.js";
 
 const router = express.Router();
 
