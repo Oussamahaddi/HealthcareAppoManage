@@ -7,7 +7,11 @@ import expressAsyncHandler from "express-async-handler";
  */
 
 const allClient = expressAsyncHandler( async(req, res) => {
-    console.log("All client");
+    try {
+        
+    } catch (err) {
+
+    }
 })
 const saveClient = expressAsyncHandler(async(req, res) => {
     console.log("save cleint ");
