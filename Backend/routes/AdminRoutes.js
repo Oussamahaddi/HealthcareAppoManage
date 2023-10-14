@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { getAllAdmin, getOneAdmin, CreateAdmin, UpdateAdmin, DeleteAdmin } from "../providers/AdminProvider.js";
+import { getAllAdmin, getOneAdmin, CreateAdmin, UpdateAdmin, DeleteAdmin } from "../controllers/AdminController.js";
 
 const router = Router();
 
