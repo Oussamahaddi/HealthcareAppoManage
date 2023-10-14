@@ -1,22 +1,47 @@
 import { Router } from "express";
 
-import {getAllAdmin,finAdmin,addAdmin,deleteAdmin,updateAdmin} from "../providers/AdminProvider.js";
+import { getAllAdmin, getOneAdmin, CreateAdmin, UpdateAdmin, DeleteAdmin } from "../providers/AdminProvider.js";
 
 const router = Router();
 
 /**
  * @GET
- * @desc // get all articals
- * @access public
+ * @desc // get all admins
+ * @access private
  */
 
+router.get('/', getAllAdmin)
 
-router.get('/',getAllAdmin)
+/**
+ * @GET
+ * @desc // get one admin
+ * @access private
+ */
 
-router.get('/find/:id',finAdmin)
-router.post('/create',addAdmin)
-router.post('/update/:id',updateAdmin)
-router.post('/delete/:id',deleteAdmin)
+router.get('/:id', getOneAdmin)
 
+/**
+ * @POST
+ * @desc // create admin
+ * @access private
+ */
+
+router.post('/', CreateAdmin)
+
+/**
+ * @PUTCH
+ * @desc // update Admin
+ * @access private
+ */
+
+router.post('/update/:id', UpdateAdmin)
+
+/**
+ * @DELETE
+ * @desc // delete admin
+ * @access private
+ */
+
+router.post('/delete/:id', DeleteAdmin)
 
 export default router;
