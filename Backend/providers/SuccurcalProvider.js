@@ -1,6 +1,6 @@
 import SuccurcalModel from "../models/SuccurcalModel.js";
 import asynchandler from "express-async-handler";
-import { SuccurcalSchema, validateschema } from "../validators/JoiSchemas.js";
+import { SuccurcalSchema, validator } from "../validators/JoiSchemas.js";
 
 /**
  * @desc Get all Succurcal
@@ -32,18 +32,13 @@ const getOneSuccurcal = asynchandler(async (req, res) => {
  */
 
 const CreateSuccurcal = asynchandler(async (req, res) => {
-    const error = validateschema(SuccurcalSchema, req.body);
-
-    if (error) {
-        return res.status(400).json({ error: error });
-    }
+    validator(SuccurcalSchema, req.body);
 
     const { title, description } = req.body;
-
     // create a new SuccurcalModel
     const Succurcals = await SuccurcalModel.create({
-        title: title,
-        description: description
+        title: title.customTrim(),
+        description: description.customTrim()
     });
     res.status(201).json(Succurcals);
 });
@@ -55,11 +50,7 @@ const CreateSuccurcal = asynchandler(async (req, res) => {
  */
 
 const UpdateSuccurcal = asynchandler(async (req, res) => {
-    const error = validateschema(SuccurcalSchema, req.body);
-
-    if (error) {
-        return res.status(400).json({ error: error });
-    }
+    validator(SuccurcalSchema, req.body);
 
     const { id } = req.params;
     const { title, description } = req.body;
@@ -67,9 +58,10 @@ const UpdateSuccurcal = asynchandler(async (req, res) => {
     // get Succurcals
     const Succurcals = await SuccurcalModel.findByPk(id);
 
-    // check if Succurcals existes
     if (!Succurcals) {
-        return res.status(404).json({ error: "Succurcal not found" });
+        if (!Succurcals) {
+            return res.status(404).json({ error: "Succurcal not found" });
+        }
     }
 
     //update Succurcals
