@@ -22,13 +22,9 @@ const UserModel = sequelize.define("user", {
     password : DataTypes.STRING,
     profile_image : DataTypes.STRING,
     role : DataTypes.ENUM("superadmin", "admin", "client", "chef", "technicien", "entreprise"),
+    actor_id : {
+        type : DataTypes.INTEGER,
+    }
 });
-
-
-UserModel.hasMany(ClientModel, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
-});
-ClientModel.belongsTo(UserModel);
 
 export default UserModel;
