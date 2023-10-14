@@ -1,4 +1,3 @@
-
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
 import ClientModel from "./ClientModel.js";
@@ -6,29 +5,51 @@ import ClientModel from "./ClientModel.js";
 const UserModel = sequelize.define("user", {
     id: {
         type: DataTypes.INTEGER,
-        primaryKey : true,
-        autoIncrement : true
+        primaryKey: true,
+        autoIncrement: true
     },
-    first_name : {
+    first_name: {
         type: DataTypes.STRING,
-        require: true,
+        allowNull: false
     },
-    last_name : DataTypes.STRING,
-    email : {
+    last_name: {
         type: DataTypes.STRING,
-        require: true,
-        isEmail: true,
+        allowNull: false
     },
-    password : DataTypes.STRING,
-    profile_image : DataTypes.STRING,
-    role : DataTypes.ENUM("superadmin", "admin", "client", "chef", "technicien", "entreprise"),
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    profile_image: DataTypes.STRING,
+    role: {
+        type: DataTypes.ENUM(
+            "client",
+            "entreprise",
+            "chef",
+            "technicien",
+            "admin",
+            "superadmin"
+        ),
+        defaultValue: "client"
+    }
 });
 
+// sequelize hooke
+UserModel.beforeCreate(async (user, options) => {
+    const emailCheckQuery = {
+        where: {
+            email: user.email
+        }
+    };
+    const userExistes = await UserModel.findOne(emailCheckQuery);
 
-UserModel.hasMany(ClientModel, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+    if (userExistes) {
+        throw new Error("user already existes");
+    }
 });
-ClientModel.belongsTo(UserModel);
 
 export default UserModel;

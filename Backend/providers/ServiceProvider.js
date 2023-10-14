@@ -1,6 +1,6 @@
 import ServiceModel from "../models/ServiceModel.js";
 import asynchandler from "express-async-handler";
-import { ServiceSchema, validateschema } from "../validators/JoiSchemas.js";
+import { ServiceSchema, validator } from "../validators/JoiSchemas.js";
 
 /**
  * @desc Get all Succurcal
@@ -32,11 +32,7 @@ const getOneService = asynchandler(async (req, res) => {
  */
 
 const CreateService = asynchandler(async (req, res) => {
-    const error = validateschema(ServiceSchema, req.body);
-
-    if (error) {
-        return res.status(400).json({ error: error });
-    }
+    validator(ServiceSchema, req.body);
 
     const { title, description } = req.body;
 
@@ -55,11 +51,7 @@ const CreateService = asynchandler(async (req, res) => {
  */
 
 const UpdateService = asynchandler(async (req, res) => {
-    const error = validateschema(ServiceSchema, req.body);
-
-    if (error) {
-        return res.status(400).json({ error: error });
-    }
+    validator(ServiceSchema, req.body);
 
     const { id } = req.params;
     const { title, description } = req.body;
@@ -67,11 +59,9 @@ const UpdateService = asynchandler(async (req, res) => {
     // get Services
     const Services = await ServiceModel.findByPk(id);
 
-    // check if Services existes
     if (!Services) {
-        return res.status(404).json({ error: "Service not found" });
+        return res.status(404).json({ error: "Services not found" });
     }
-
     //update Services
     Services.title = title;
     Services.description = description;
