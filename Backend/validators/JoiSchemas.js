@@ -45,6 +45,14 @@ const UserSchema = Joi.object({
     profile_image: Joi.string().required().messages(customErrorMessages)
 });
 
+const AdminSchema = Joi.object({
+    first_name: Joi.string().max(20).required().messages(customErrorMessages),
+    last_name: Joi.string().max(20).required().messages(customErrorMessages),
+    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org'] } }).messages(customErrorMessages),
+    password: Joi.string().min(10).required().messages(customErrorMessages),
+    profile_image: Joi.string().required().messages(customErrorMessages)
+})
+
 /**
  * @HELPER
  * @type function
@@ -55,11 +63,10 @@ const UserSchema = Joi.object({
 
 const validator = (schema, data) => {
     const { error } = schema.validate(data);
-
     if (error) {
         const errors = error.details.map((detail) => detail.message);
         throw new Error(errors);
     }
 };
 
-export { SuccurcalSchema, ServiceSchema, UserSchema, validator };
+export { SuccurcalSchema, ServiceSchema, UserSchema, validator, AdminSchema };
