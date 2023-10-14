@@ -1,5 +1,5 @@
 import Joi from "joi";
-
+import exit from "express"
 //  schema that defines custom Error Messages
 const customErrorMessages = {
     "string.base": "The field must be a valid string.",
@@ -27,6 +27,14 @@ const ServiceSchema = Joi.object({
     description: Joi.string().required().messages(customErrorMessages)
 });
 
+const AdminSchema = Joi.object({
+    first_name: Joi.string().max(20).required().messages(customErrorMessages),
+    last_name: Joi.string().max(20).required().messages(customErrorMessages),
+    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org'] } }).messages(customErrorMessages),
+    password: Joi.string().min(10).required().messages(customErrorMessages),
+    profile_image: Joi.string().required().messages(customErrorMessages)
+})
+
 /**
  * @HELPER
  * @type functions
@@ -37,7 +45,6 @@ const ServiceSchema = Joi.object({
 
 const validateschema = (schema, data) => {
     const { error } = schema.validate(data);
-
     if (error) {
         return error.details.map((detail) => detail.message);
     }
@@ -45,4 +52,4 @@ const validateschema = (schema, data) => {
     return null; // Return null if validation is successful
 };
 
-export { SuccurcalSchema, ServiceSchema, validateschema };
+export { SuccurcalSchema, AdminSchema, ServiceSchema, validateschema };
