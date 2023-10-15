@@ -67,13 +67,13 @@ const UpdateSuccurcal = asynchandler(async (req, res) => {
 
     if (!Succurcals) {
         if (!Succurcals) {
-            return res.status(404).json({ error: "Succurcal not found" });
+            throw new Error("Succurcal not found");
         }
     }
 
     //update Succurcals
-    Succurcals.title = title;
-    Succurcals.description = description;
+    Succurcals.title = title.customTrim();
+    Succurcals.description = description.customTrim();
 
     // save Succurcals
     await Succurcals.save();
@@ -94,7 +94,7 @@ const DeleteSuccurcal = asynchandler(async (req, res) => {
     const existingSuccurcal = await SuccurcalModel.findByPk(id);
     // check if Succurcals existes
     if (!existingSuccurcal) {
-        return res.status(404).json({ error: "Succurcal not found" });
+        throw new Error("Succurcal not found");
     }
 
     // If it exists, delete it

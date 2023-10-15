@@ -47,7 +47,7 @@ UserModel.beforeCreate(async (user, options) => {
     const userExistes = await UserModel.findOne(emailCheckQuery);
 
     if (userExistes) {
-        throw new Error("user already existes");
+        throw new Error("user already exist");
     }
 });
 
