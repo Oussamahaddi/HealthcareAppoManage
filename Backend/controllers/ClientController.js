@@ -1,5 +1,5 @@
 import expressAsyncHandler from "express-async-handler";
-import ClientModel from "../models/ClientModel.js";
+import {ClientModel} from "../models/index.js";
 
 /**
  * @desc Get all client
