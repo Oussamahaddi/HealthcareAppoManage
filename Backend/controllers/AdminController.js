@@ -1,7 +1,6 @@
-import AdminModel from "../models/AdminModel.js";
 import expressAsyncHandler from "express-async-handler";
-import { AdminSchema, validateschema } from "../validators/JoiSchemas.js";
-import UserModel from "../models/UserModel.js";
+import { AdminSchema, validator } from "../validators/JoiSchemas.js";
+import {UserModel, AdminModel} from "../models/index.js";
 
 
 /**
@@ -39,7 +38,7 @@ const getOneAdmin = expressAsyncHandler(async (req, res) => {
  */
 
 const CreateAdmin = expressAsyncHandler(async (req, res) => {
-    const error = validateschema(AdminSchema, req.body);
+    const error = validator(AdminSchema, req.body);
 
     if (error) {
         return res.status(400).json({ error: "error" })
@@ -70,7 +69,7 @@ const CreateAdmin = expressAsyncHandler(async (req, res) => {
  */
 
 const UpdateAdmin = expressAsyncHandler(async (req, res) => {
-    const error = await validateschema(AdminSchema, req.body);
+    const error = await validator(AdminSchema, req.body);
 
     if (error) {
         return res.status(400).json({ error: error });

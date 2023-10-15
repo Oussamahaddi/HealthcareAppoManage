@@ -5,6 +5,7 @@
     "main": "server.js",
     "type": "module",
     "scripts": {
+        "babel": "npx babel-node Backend/server.js",
         "start": "node Backend/server.js",
         "server": "nodemon Backend/server.js",
         "db-setup": "node Backend/config/DbAsync.js"
@@ -16,6 +17,7 @@
     "author": "Redouane khlifah , Oussama Haddi , Abdeslam hannouni ,Houssni ismail , İkram mahfoud",
     "license": "ISC",
     "devDependencies": {
+        "@babel/cli": "^7.23.0",
         "@babel/core": "^7.23.2",
         "@babel/node": "^7.22.19",
         "@babel/preset-env": "^7.23.2",
@@ -33,6 +35,6 @@
         "express-async-handler": "^1.2.0",
         "joi": "^17.11.0",
         "mysql2": "^3.6.1",
-        "sequelize": "^6.33.0",
+        "sequelize": "^6.33.0"
     }
 }

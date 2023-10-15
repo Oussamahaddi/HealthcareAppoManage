@@ -27,7 +27,7 @@ router.get("/:id");
  * @desc // create a new user
  * @access public
  */
-router.post("/", registerUser);
+router.post("/register", registerUser);
 
 /**
  * @PATCH

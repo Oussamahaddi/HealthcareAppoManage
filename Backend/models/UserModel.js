@@ -1,8 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
-import ClientModel from "./ClientModel.js";
 
-const UserModel = sequelize.define("user", {
+export const UserModel = sequelize.define("user", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -39,17 +38,15 @@ const UserModel = sequelize.define("user", {
 });
 
 // sequelize hooke
-UserModel.beforeCreate(async (user, options) => {
-    const emailCheckQuery = {
-        where: {
-            email: user.email
-        }
-    };
-    const userExistes = await UserModel.findOne(emailCheckQuery);
+// UserModel.beforeCreate(async (user, options) => {
+//     const emailCheckQuery = {
+//         where: {
+//             email: user.email
+//         }
+//     };
+//     const userExistes = await UserModel.findOne(emailCheckQuery);
 
-    if (userExistes) {
-        throw new Error("user already existes");
-    }
-});
-
-export default UserModel;
+//     if (userExistes) {
+//         throw new Error("user already existes");
+//     }
+// });
