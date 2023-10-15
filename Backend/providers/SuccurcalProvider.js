@@ -1,4 +1,7 @@
+import sequelize from "../config/sequelize.js";
 import SuccurcalModel from "../models/SuccurcalModel.js";
+import ServiceModel from "../models/ServiceModel.js";
+import SuccurcalServicePivot from "../models/SuccurcalServicePivot.js";
 import asynchandler from "express-async-handler";
 import { SuccurcalSchema, validator } from "../validators/JoiSchemas.js";
 
@@ -9,7 +12,9 @@ import { SuccurcalSchema, validator } from "../validators/JoiSchemas.js";
  */
 
 const getAllSuccurcal = asynchandler(async (req, res) => {
-    const Succurcals = await SuccurcalModel.findAll();
+    const Succurcals = await SuccurcalModel.findAll({
+        include: ServiceModel
+    });
     res.status(200).json(Succurcals);
 });
 
@@ -21,7 +26,9 @@ const getAllSuccurcal = asynchandler(async (req, res) => {
 
 const getOneSuccurcal = asynchandler(async (req, res) => {
     const { id } = req.params;
-    const Succurcals = await SuccurcalModel.findByPk(id);
+    const Succurcals = await SuccurcalModel.findByPk(id, {
+        include: ServiceModel
+    });
     res.status(200).json(Succurcals);
 });
 
@@ -45,7 +52,7 @@ const CreateSuccurcal = asynchandler(async (req, res) => {
 
 /**
  * @desc Update Succurcal
- * @route PATCH /Succurcal
+ * @route PATCH /Succurcal/:id
  * @access private
  */
 
@@ -96,10 +103,46 @@ const DeleteSuccurcal = asynchandler(async (req, res) => {
     res.status(200).json({ message: "Succurcal deleted successfully" });
 });
 
+/**
+ * @desc assign services to Succurcal
+ * @route post /Succurcal/:id
+ * @access private
+ */
+
+const assignservicesToSuccurcal = asynchandler(async (req, res) => {
+    const Succurcal_id = req.params.id;
+    const { services } = req.body;
+    const Succurcal = await SuccurcalModel.findByPk(Succurcal_id);
+    if (!Succurcal) {
+        return res.status(404).json({ error: "Succurcal not found" });
+    }
+    const transaction = await sequelize.transaction();
+
+    try {
+        for (const serviceId of services) {
+            await SuccurcalServicePivot.create(
+                {
+                    SuccurcalId: Succurcal_id,
+                    ServiceId: serviceId
+                },
+                { transaction: transaction }
+            );
+        }
+        await transaction.commit();
+        res.status(201).json(
+            "assign services To Succurcal created successfully."
+        );
+    } catch {
+        await transaction.rollback();
+        throw new Error("error occurred while assigning services");
+    }
+});
+
 export {
     getAllSuccurcal,
     getOneSuccurcal,
     CreateSuccurcal,
     UpdateSuccurcal,
-    DeleteSuccurcal
+    DeleteSuccurcal,
+    assignservicesToSuccurcal
 };

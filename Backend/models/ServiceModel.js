@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
+import ExigenceServiceModel from "./ExigenceServiceModel.js";
 
 const ServiceModel = sequelize.define("Service", {
     id: {
@@ -12,5 +13,6 @@ const ServiceModel = sequelize.define("Service", {
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
 });
+ServiceModel.hasMany(ExigenceServiceModel);
 
 export default ServiceModel;

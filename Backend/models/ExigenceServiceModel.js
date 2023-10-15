@@ -1,18 +1,22 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-const SuccurcalModel = sequelize.define("Succurcal", {
+const ExigenceServiceModel = sequelize.define("ExigenceService", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
     },
+    typeInput: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     title: {
         type: DataTypes.STRING,
         allowNull: false
     },
-    description: {
-        type: DataTypes.STRING,
+    required: {
+        type: DataTypes.BOOLEAN,
         allowNull: false
     },
     createdAt: {
@@ -23,4 +27,4 @@ const SuccurcalModel = sequelize.define("Succurcal", {
     }
 });
 
-export default SuccurcalModel;
+export default ExigenceServiceModel;

@@ -1,12 +1,12 @@
 import { Router } from "express";
 
-
 import {
     getAllSuccurcal,
     getOneSuccurcal,
     CreateSuccurcal,
     UpdateSuccurcal,
-    DeleteSuccurcal
+    DeleteSuccurcal,
+    assignservicesToSuccurcal
 } from "../providers/SuccurcalProvider.js";
 
 const router = Router();
@@ -45,5 +45,13 @@ router.patch("/:id", UpdateSuccurcal);
  * @access private
  */
 router.delete("/:id", DeleteSuccurcal);
+
+/**
+ * @POST
+ * @route post /Succurcal/:id
+ * @access private
+ */
+
+router.post("/:id", assignservicesToSuccurcal);
 
 export default router;

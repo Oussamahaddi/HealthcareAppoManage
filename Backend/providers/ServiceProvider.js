@@ -1,4 +1,5 @@
 import ServiceModel from "../models/ServiceModel.js";
+import SuccurcalModel from "../models/SuccurcalModel.js";
 import asynchandler from "express-async-handler";
 import { ServiceSchema, validator } from "../validators/JoiSchemas.js";
 
@@ -9,7 +10,9 @@ import { ServiceSchema, validator } from "../validators/JoiSchemas.js";
  */
 
 const getAllService = asynchandler(async (req, res) => {
-    const Services = await ServiceModel.findAll();
+    const Services = await ServiceModel.findAll({
+        include: SuccurcalModel
+    });
     res.status(200).json(Services);
 });
 
@@ -21,7 +24,9 @@ const getAllService = asynchandler(async (req, res) => {
 
 const getOneService = asynchandler(async (req, res) => {
     const { id } = req.params;
-    const Services = await ServiceModel.findByPk(id);
+    const Services = await ServiceModel.findByPk(id, {
+        include: SuccurcalModel
+    });
     res.status(200).json(Services);
 });
 
@@ -46,7 +51,7 @@ const CreateService = asynchandler(async (req, res) => {
 
 /**
  * @desc Update Service
- * @route PATCH /Service
+ * @route PATCH /Service/:id
  * @access private
  */
 
