@@ -65,6 +65,12 @@ const LoginSchema = Joi.object({
     email : Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org'] } }).messages(customErrorMessages),
     password : Joi.string().required().messages(customErrorMessages)
 })
+
+const TechnicienSchema = Joi.object({
+    dispo: Joi.string().required().messages(customErrorMessages),
+    grade: Joi.string().required().messages(customErrorMessages)
+});
+
 /**
  * @HELPER
  * @type function
@@ -88,5 +94,6 @@ export {
     ExigenceServiceSchema,
     validator,
     AdminSchema,
-    LoginSchema
+    LoginSchema,
+    TechnicienSchema
 };
