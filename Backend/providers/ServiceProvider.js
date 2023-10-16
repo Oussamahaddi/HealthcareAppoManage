@@ -1,6 +1,8 @@
 import ServiceModel from "../models/ServiceModel.js";
+import SuccurcalModel from "../models/SuccurcalModel.js";
 import asynchandler from "express-async-handler";
 import { ServiceSchema, validator } from "../validators/JoiSchemas.js";
+import ExigenceServiceModel from "../models/ExigenceServiceModel.js";
 
 /**
  * @desc Get all Succurcal
@@ -9,7 +11,9 @@ import { ServiceSchema, validator } from "../validators/JoiSchemas.js";
  */
 
 const getAllService = asynchandler(async (req, res) => {
-    const Services = await ServiceModel.findAll();
+    const Services = await ServiceModel.findAll({
+        include: [SuccurcalModel, ExigenceServiceModel]
+    });
     res.status(200).json(Services);
 });
 
@@ -21,7 +25,9 @@ const getAllService = asynchandler(async (req, res) => {
 
 const getOneService = asynchandler(async (req, res) => {
     const { id } = req.params;
-    const Services = await ServiceModel.findByPk(id);
+    const Services = await ServiceModel.findByPk(id, {
+        include: [SuccurcalModel, ExigenceServiceModel]
+    });
     res.status(200).json(Services);
 });
 
@@ -38,15 +44,15 @@ const CreateService = asynchandler(async (req, res) => {
 
     // create a new ServiceModel
     const Services = await ServiceModel.create({
-        title: title,
-        description: description
+        title: title.customTrim(),
+        description: description.customTrim()
     });
     res.status(201).json(Services);
 });
 
 /**
  * @desc Update Service
- * @route PATCH /Service
+ * @route PATCH /Service/:id
  * @access private
  */
 
@@ -60,11 +66,11 @@ const UpdateService = asynchandler(async (req, res) => {
     const Services = await ServiceModel.findByPk(id);
 
     if (!Services) {
-        return res.status(404).json({ error: "Services not found" });
+        throw new Error("Service not found");
     }
     //update Services
-    Services.title = title;
-    Services.description = description;
+    Services.title = title.customTrim();
+    Services.description = description.customTrim();
 
     // save Services
     await Services.save();
@@ -85,7 +91,7 @@ const DeleteService = asynchandler(async (req, res) => {
     const existingService = await ServiceModel.findByPk(id);
     // check if Services existes
     if (!existingService) {
-        return res.status(404).json({ error: "Service not found" });
+        throw new Error("Service not found");
     }
 
     // If it exists, delete it

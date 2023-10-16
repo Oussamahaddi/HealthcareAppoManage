@@ -13,7 +13,8 @@ const customErrorMessages = {
     "string.max": "The field must not exceed {#limit} characters.",
     "string.email": "The email address is not valid.",
     "any.required": "The {#label} field is required.",
-    "string.empty": "the {#label} Field cannot be empty"
+    "string.empty": "the {#label} Field cannot be empty",
+    "number.base": "The {#label} field must be a valid id."
 };
 
 /**
@@ -46,6 +47,13 @@ const UserSchema = Joi.object({
     role : Joi.string().valid("client", "entreprise")
 });
 
+const ExigenceServiceSchema = Joi.object({
+    typeInput: Joi.string().required().messages(customErrorMessages),
+    title: Joi.string().required().messages(customErrorMessages),
+    required: Joi.string().required().messages(customErrorMessages),
+    serviceId: Joi.required().messages(customErrorMessages)
+});
+
 const AdminSchema = Joi.object({
     first_name: Joi.string().max(20).required().messages(customErrorMessages),
     last_name: Joi.string().max(20).required().messages(customErrorMessages),
@@ -58,7 +66,6 @@ const LoginSchema = Joi.object({
     email : Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org'] } }).messages(customErrorMessages),
     password : Joi.string().required().messages(customErrorMessages)
 })
-
 /**
  * @HELPER
  * @type function
@@ -75,4 +82,12 @@ const validator = (schema, data) => {
     }
 };
 
-export { SuccurcalSchema, ServiceSchema, UserSchema, validator, AdminSchema, LoginSchema };
+export {
+    SuccurcalSchema,
+    ServiceSchema,
+    UserSchema,
+    ExigenceServiceSchema,
+    validator,
+    AdminSchema,
+    LoginSchema
+};
