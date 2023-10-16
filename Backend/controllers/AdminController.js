@@ -40,6 +40,11 @@ const getOneAdmin = expressAsyncHandler(async (req, res) => {
  */
 
 const CreateAdmin = expressAsyncHandler(async (req, res) => {
+    const error = await validator(AdminSchema, req.body);
+
+    if (error) {
+        return res.status(400).json({ error: error });
+    }
     let { first_name, last_name, email, password, profile_image, role } = req.body;
 
     const newUser = await AdminModel.create({
