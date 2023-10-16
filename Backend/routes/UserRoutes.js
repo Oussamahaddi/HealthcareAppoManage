@@ -1,9 +1,10 @@
 import { Router } from "express";
-
+import { auth } from "../middleware/AuthMiddleware.js";
 import {
     authUser,
     registerUser,
-    getAllUseres
+    getAllUseres,
+    logoutUser
 } from "../controllers/userController.js";
 
 const router = Router();
@@ -13,7 +14,7 @@ const router = Router();
  * @desc // get all Succurcals
  * @access public
  */
-router.get("/", getAllUseres);
+router.get("/", auth, getAllUseres);
 
 /**
  * @GET
@@ -30,17 +31,31 @@ router.get("/:id");
 router.post("/register", registerUser);
 
 /**
+ * @POST
+ * @desc // login user
+ * @access public
+ */
+router.post("/auth", authUser);
+
+/**
+ * @POST
+ * @desc // logout user
+ * @access public
+ */
+router.post("/logout", auth, logoutUser);
+
+/**
  * @PATCH
  * @desc // update a Succurcal
  * @access private
  */
-router.patch("/:id");
+router.patch("/update/:id", auth);
 
 /**
  * @DELETE
  * @desc // Delete a Succurcal
  * @access private
  */
-router.delete("/:id");
+router.delete("/delete/:id");
 
 export default router;

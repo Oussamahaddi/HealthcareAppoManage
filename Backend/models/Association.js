@@ -2,8 +2,8 @@ import { DataTypes } from "sequelize";
 import {ClientModel, UserModel} from "./index.js"
 
 /**
- * @type one to one
- * @desc client 
+ * @type one to one association 
+ * @desc store association on property user inside object clientModel
  * @access public
  */
 
@@ -21,3 +21,9 @@ UserModel.client = UserModel.belongsTo(ClientModel, {
     onDelete : "CASCADE",
     onUpdate : "CASCADE"
 });
+
+/**
+ * @type ....
+ * @desc ....
+ * @access public
+ */

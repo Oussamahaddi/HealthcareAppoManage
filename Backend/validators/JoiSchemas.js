@@ -54,6 +54,11 @@ const AdminSchema = Joi.object({
     profile_image: Joi.string().required().messages(customErrorMessages)
 })
 
+const LoginSchema = Joi.object({
+    email : Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org'] } }).messages(customErrorMessages),
+    password : Joi.string().required().messages(customErrorMessages)
+})
+
 /**
  * @HELPER
  * @type function
@@ -70,4 +75,4 @@ const validator = (schema, data) => {
     }
 };
 
-export { SuccurcalSchema, ServiceSchema, UserSchema, validator, AdminSchema };
+export { SuccurcalSchema, ServiceSchema, UserSchema, validator, AdminSchema, LoginSchema };
