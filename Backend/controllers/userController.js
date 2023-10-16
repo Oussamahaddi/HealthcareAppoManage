@@ -11,7 +11,7 @@ import bcrypt from "bcrypt";
  * @route post /user
  * @access public
  */
-const registerUser = asynchandler(async (req, res) => {
+const createUser = asynchandler(async (req, res) => {
     // check if inputes are valid
     validator(UserSchema, req.body);
 
@@ -34,9 +34,9 @@ const registerUser = asynchandler(async (req, res) => {
         include : [ClientModel.user]
     });
 
-    user.token = generateJwt(res, newUser.id);
+    newUser.token = generateJwt(res, newUser.id);
 
-    res.status(201).json(newUser);
+    res.status(201).json(newUser.token);
 });
 
 /**
@@ -81,7 +81,7 @@ const logoutUser = asynchandler(async (req, res) => {
 
 const getAllUseres = asynchandler(async (req, res) => {
     const users = await UserModel.findAll({include: ClientModel});
-    res.status(200).json(users);
+    res.status(200).json(req.user);
 });
 
-export { authUser, registerUser, getAllUseres, logoutUser };
+export { authUser, createUser as registerUser, getAllUseres, logoutUser };

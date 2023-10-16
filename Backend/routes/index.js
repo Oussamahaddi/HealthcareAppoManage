@@ -13,6 +13,6 @@ router.use("/client", Client);
 router.use("/service", Service);
 router.use("/ExigenceService", ExigenceService);
 router.use("/user", User);
-router.use("/Admin",Admin)
+router.use("/admin",Admin)
 
 export default router;
