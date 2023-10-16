@@ -11,15 +11,11 @@ import bcrypt from "bcrypt";
  * @route post /user
  * @access public
  */
-const registerUser = asynchandler(async (req, res) => {
+const createUser = asynchandler(async (req, res) => {
     // check if inputes are valid
     validator(UserSchema, req.body);
 
-    let { first_name, last_name, email, password, profile_image, role } = req.body;
-
-    if (role != ROLE_LIST.client) {
-        role = ROLE_LIST.entreprise;
-    }
+    let { first_name, last_name, email, password, profile_image } = req.body;
 
     const newUser = await ClientModel.create({
         user : {
@@ -28,15 +24,18 @@ const registerUser = asynchandler(async (req, res) => {
             email: email,
             password: password,
             profile_image: profile_image,
-            role : role
         }
     }, {
         include : [ClientModel.user]
     });
+    
+    if (newUser) {
+        newUser.token = generateJwt(res, newUser.id);
+        res.status(201).json({token : newUser.token});
+    } else {
+        throw new Error("Can't create user for some reason");
+    }
 
-    user.token = generateJwt(res, newUser.id);
-
-    res.status(201).json(newUser);
 });
 
 /**
@@ -52,7 +51,7 @@ const authUser = asynchandler(async (req, res) => {
     const comparePwd = await bcrypt.compare(password, user.password);
     if (user && comparePwd) {
         user.token = generateJwt(res, user.id);
-        res.status(201).json(user.token);
+        res.status(201).json({token : user.token});
     } else {
         res.status(401);
         throw new Error("Invalid email or password ");
@@ -66,10 +65,6 @@ const authUser = asynchandler(async (req, res) => {
  */
 
 const logoutUser = asynchandler(async (req, res) => {
-    res.cookie("jwt", "", {
-        httpOnly : true,
-        expires : new Date(0)
-    })
     res.status(200).json({message : "Logged out"});
 });
 
@@ -81,7 +76,7 @@ const logoutUser = asynchandler(async (req, res) => {
 
 const getAllUseres = asynchandler(async (req, res) => {
     const users = await UserModel.findAll({include: ClientModel});
-    res.status(200).json(users);
+    res.status(200).json(req.user);
 });
 
-export { authUser, registerUser, getAllUseres, logoutUser };
+export { authUser, createUser, getAllUseres, logoutUser };

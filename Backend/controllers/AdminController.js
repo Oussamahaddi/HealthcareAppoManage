@@ -1,6 +1,8 @@
 import expressAsyncHandler from "express-async-handler";
 import { AdminSchema, validator } from "../validators/JoiSchemas.js";
 import {UserModel, AdminModel} from "../models/index.js";
+import ROLE_LIST from "../config/Role_list.js";
+import { generateJwt } from "../utils/generateToken.js";
 
 
 /**
@@ -38,28 +40,28 @@ const getOneAdmin = expressAsyncHandler(async (req, res) => {
  */
 
 const CreateAdmin = expressAsyncHandler(async (req, res) => {
-    const error = validator(AdminSchema, req.body);
+    const error = await validator(AdminSchema, req.body);
 
     if (error) {
-        return res.status(400).json({ error: "error" })
+        return res.status(400).json({ error: error });
     }
+    let { first_name, last_name, email, password, profile_image, role } = req.body;
 
-    const { first_name, last_name, email, password, profile_image } = req.body;
+    const newUser = await AdminModel.create({
+        user : {
+            first_name: first_name.customTrim(),
+            last_name: last_name.customTrim(),
+            email: email,
+            password: password,
+            profile_image: profile_image
+        }
+    }, {
+        include : [AdminModel.user]
+    });
 
-    const User = await UserModel.create({
-        first_name: first_name,
-        last_name: last_name,
-        email: email,
-        password: password,
-        profile_image: profile_image,
-        role: "admin"
-    })
+    newUser.token = generateJwt(res, newUser.id);
 
-        .then(result => AdminModel.create({
-            userId: result.id
-        }))
-
-    res.status(201).json(User);
+    res.status(201).json(newUser.token);
 })
 
 /**
@@ -93,6 +95,7 @@ const UpdateAdmin = expressAsyncHandler(async (req, res) => {
 
     res.status(201).json(Admin);
 })
+
 
 /**
  * @desc Delete admin

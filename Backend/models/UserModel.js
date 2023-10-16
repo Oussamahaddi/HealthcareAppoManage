@@ -35,6 +35,10 @@ export const UserModel = sequelize.define("users", {
             "superadmin"
         ),
         defaultValue: "client"
+    },
+    actor_id : {
+        type : DataTypes.INTEGER,
+        allowNull : false,
     }
 });
 
