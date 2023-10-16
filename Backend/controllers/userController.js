@@ -1,15 +1,10 @@
 import asynchandler from "express-async-handler";
 import ROLE_LIST from "../config/Role_list.js";
-import { UserSchema, validator } from "../validators/JoiSchemas.js";
+import { UserSchema, validator, LoginSchema } from "../validators/JoiSchemas.js";
 import {ClientModel, UserModel} from "../models/index.js"
+import { generateJwt } from "../utils/generateToken.js";
+import bcrypt from "bcrypt";
 
-/**
- * @desc loign
- * @route post /user
- * @access public
- */
-
-const authUser = asynchandler(async (req, res) => {});
 
 /**
  * @desc register a new user
@@ -26,8 +21,6 @@ const registerUser = asynchandler(async (req, res) => {
         role = ROLE_LIST.entreprise;
     }
 
-    // const client = await ClientModel.create()
-
     const newUser = await ClientModel.create({
         user : {
             first_name: first_name.customTrim(),
@@ -41,12 +34,54 @@ const registerUser = asynchandler(async (req, res) => {
         include : [ClientModel.user]
     });
 
+    user.token = generateJwt(res, newUser.id);
+
     res.status(201).json(newUser);
 });
 
+/**
+ * @desc loign the user
+ * @route post /user
+ * @access public
+ */
+
+const authUser = asynchandler(async (req, res) => {
+    validator(LoginSchema, req.body);
+    const {email, password} = req.body;
+    const user = await UserModel.findOne({where : {email : email}});
+    const comparePwd = await bcrypt.compare(password, user.password);
+    if (user && comparePwd) {
+        user.token = generateJwt(res, user.id);
+        res.status(201).json(user.token);
+    } else {
+        res.status(401);
+        throw new Error("Invalid email or password ");
+    }
+});
+
+/**
+ * @desc logout the user
+ * @route post /user
+ * @access public
+ */
+
+const logoutUser = asynchandler(async (req, res) => {
+    res.cookie("jwt", "", {
+        httpOnly : true,
+        expires : new Date(0)
+    })
+    res.status(200).json({message : "Logged out"});
+});
+
+/**
+ * @desc get all users
+ * @route get /user
+ * @access public
+ */
+
 const getAllUseres = asynchandler(async (req, res) => {
-    const users = UserModel.findAll();
+    const users = await UserModel.findAll({include: ClientModel});
     res.status(200).json(users);
 });
 
-export { authUser, registerUser, getAllUseres };
+export { authUser, registerUser, getAllUseres, logoutUser };
