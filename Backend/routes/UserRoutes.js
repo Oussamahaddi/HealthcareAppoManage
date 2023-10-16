@@ -2,7 +2,7 @@ import { Router } from "express";
 import { auth } from "../middleware/AuthMiddleware.js";
 import {
     authUser,
-    registerUser,
+    createUser,
     getAllUseres,
     logoutUser
 } from "../controllers/userController.js";
@@ -28,7 +28,7 @@ router.get("/:id");
  * @desc // create a new user
  * @access public
  */
-router.post("/register", registerUser);
+router.post("/register", createUser);
 
 /**
  * @POST

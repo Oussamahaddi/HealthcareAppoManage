@@ -42,18 +42,13 @@ const getOneAdmin = expressAsyncHandler(async (req, res) => {
 const CreateAdmin = expressAsyncHandler(async (req, res) => {
     let { first_name, last_name, email, password, profile_image, role } = req.body;
 
-    if (role != ROLE_LIST.client) {
-        role = ROLE_LIST.entreprise;
-    }
-
     const newUser = await AdminModel.create({
         user : {
             first_name: first_name.customTrim(),
             last_name: last_name.customTrim(),
             email: email,
             password: password,
-            profile_image: profile_image,
-            role : role
+            profile_image: profile_image
         }
     }, {
         include : [AdminModel.user]
