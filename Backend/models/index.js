@@ -5,4 +5,5 @@ export * from "./UserModel.js";
 export * from "./ExigenceServiceModel.js";
 export * from "./AdminModel.js";
 export * from "./ClientModel.js";
+export * from "./TechnicienModel.js";
 import "./Association.js";
