@@ -3,8 +3,10 @@ import {
     AdminModel,
     ClientModel,
     UserModel,
-    TechnicienModel
+    TechnicienModel,
+    ChefModel
 } from "./index.js";
+
 
 /**
  * @type one to one association
@@ -51,3 +53,20 @@ UserModel.technicien = UserModel.belongsTo(TechnicienModel, {
     foreignKey: "actor_id",
     constraints: false
 });
+
+
+/**
+ * @type one to one association
+ * @desc store association on property user inside object ChefModel
+ * @access public
+ */
+ChefModel.user = ChefModel.hasOne(UserModel, {
+    foreignKey: "actor_id",
+    constraints: false,
+    scope: { role: "Chef" }
+});
+UserModel.Chef = UserModel.belongsTo(ChefModel, {
+    foreignKey: "actor_id",
+    constraints: false
+});
+

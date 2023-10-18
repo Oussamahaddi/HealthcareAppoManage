@@ -71,6 +71,10 @@ const TechnicienSchema = Joi.object({
     grade: Joi.string().required().messages(customErrorMessages)
 });
 
+const ChefSchema = Joi.object({
+    grade: Joi.string().required().messages(customErrorMessages)
+});
+
 /**
  * @HELPER
  * @type function
@@ -95,5 +99,6 @@ export {
     validator,
     AdminSchema,
     LoginSchema,
-    TechnicienSchema
+    TechnicienSchema,
+    ChefSchema
 };
