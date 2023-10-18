@@ -11,22 +11,22 @@ import bcrypt from "bcrypt";
  * @route post /user
  * @access public
  */
+
 const createUser = asynchandler(async (req, res) => {
     // check if inputes are valid
     validator(UserSchema, req.body);
 
     let { first_name, last_name, email, password, profile_image } = req.body;
 
-    const newUser = await ClientModel.create({
-        user : {
-            first_name: first_name.customTrim(),
-            last_name: last_name.customTrim(),
-            email: email,
-            password: password,
-            profile_image: profile_image,
-        }
-    }, {
-        include : [ClientModel.user]
+    const newUser = await UserModel.create({
+        first_name: first_name.customTrim(),
+        last_name: last_name.customTrim(),
+        email: email,
+        password: password,
+        profile_image: profile_image,
+        client : {}
+    }, {    
+        include : [UserModel.client]
     });
     
     if (newUser) {
@@ -48,9 +48,10 @@ const authUser = asynchandler(async (req, res) => {
     validator(LoginSchema, req.body);
     const {email, password} = req.body;
     const user = await UserModel.findOne({where : {email : email}});
+    if (!user) throw new Error("User Not Found");
     const comparePwd = await bcrypt.compare(password, user.password);
     if (user && comparePwd) {
-        user.token = generateJwt(res, user.id);
+        user.token = generateJwt(res, user.id, user.role);
         res.status(201).json({token : user.token});
     } else {
         res.status(401);

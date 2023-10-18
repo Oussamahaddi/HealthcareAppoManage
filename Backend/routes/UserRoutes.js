@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { auth } from "../middleware/AuthMiddleware.js";
+import { verifyRole } from "../middleware/verifyRole.js";
+import ROLE_LIST from "../config/Role_list.js";
 import {
     authUser,
     createUser,
@@ -14,7 +16,7 @@ const router = Router();
  * @desc // get all Succurcals
  * @access public
  */
-router.get("/", auth, getAllUseres);
+router.get("/", auth, verifyRole(ROLE_LIST.admin, ROLE_LIST.client), getAllUseres);
 
 /**
  * @GET

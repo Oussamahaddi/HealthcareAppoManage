@@ -38,7 +38,6 @@ export const UserModel = sequelize.define("users", {
     },
     actor_id : {
         type : DataTypes.INTEGER,
-        allowNull : false,
     }
 });
 
