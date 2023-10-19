@@ -1,12 +1,13 @@
 import { DataTypes } from "sequelize";
+
 import {
     AdminModel,
     ClientModel,
     UserModel,
     TechnicienModel,
-    ChefModel
+    ChefModel,
+    SuccurcalModel
 } from "./index.js";
-
 
 /**
  * @type one to one association
@@ -54,7 +55,6 @@ UserModel.technicien = UserModel.belongsTo(TechnicienModel, {
     constraints: false
 });
 
-
 /**
  * @type one to one association
  * @desc store association on property user inside object ChefModel
@@ -70,3 +70,14 @@ UserModel.Chef = UserModel.belongsTo(ChefModel, {
     constraints: false
 });
 
+
+/**
+ * @type {Association}
+ * @description Establishes a "belongsTo" association where a Succursal has many Chefs.
+ * @access public
+*/
+
+SuccurcalModel.hasOne(ChefModel, {
+    constraints: false,
+  });
+  ChefModel.belongsTo(SuccurcalModel);

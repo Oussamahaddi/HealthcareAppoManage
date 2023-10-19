@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-const SuccurcalModel = sequelize.define("Succurcal", {
+export const SuccurcalModel = sequelize.define("Succurcal", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -36,4 +36,3 @@ SuccurcalModel.beforeCreate(async (succurcal, options) => {
     }
 });
 
-export default SuccurcalModel;

@@ -36,7 +36,6 @@ const ServiceSchema = Joi.object({
 const UserSchema = Joi.object({
     first_name: Joi.string().required().messages(customErrorMessages),
     last_name: Joi.string().required().messages(customErrorMessages),
-    last_name: Joi.string().required().messages(customErrorMessages),
     email: Joi.string().email().required().messages(customErrorMessages),
     password: Joi.string()
         .pattern(/^\S*$/)
