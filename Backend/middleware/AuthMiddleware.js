@@ -15,7 +15,6 @@ export const auth = asyncHandler(async (req, res, next) => {
             const decoded = jwt.verify(newToken, process.env.jwt_secret)
             // find the user by primary key using the userid from decoded object and store it on new property req.user
             req.user = decoded;
-            console.log("token howa hadak");
         } catch (err) {
             res.status(401);
             throw new Error("Not authorized, invalid token");
