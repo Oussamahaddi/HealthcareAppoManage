@@ -1,12 +1,7 @@
 import asynchandler from "express-async-handler";
-import {
-    UserSchema,
-    ChefSchema,
-    validator
-} from "../validators/JoiSchemas.js";
+import { UserSchema, ChefSchema, validator } from "../validators/JoiSchemas.js";
 import { ChefModel } from "../models/ChefModel.js";
 import { UserModel } from "../models/UserModel.js";
-
 
 
 
@@ -39,31 +34,30 @@ const getOneChefById = asynchandler(async (req, res) => {
 
 
 
-
 /**
  * @desc Create a new Chef
- * @route POST /Chefs
+ * @route POST /chef/create
  * @access private
  */
 const createChef = asynchandler(async (req, res) => {
-    const { first_name, last_name, email, profile_image, password } = req.body;
+    const { first_name, last_name, email, profile_image, password, grade ,succursal_id  } = req.body;
 
     const user = {
         first_name,
         last_name,
         email,
-        profile_image,
-        password
+        password,
+        profile_image
     };
-
-    const { grade } = req.body;
 
     const chef = {
-        grade
+        grade,
+        succursal_id
     };
 
-    validator(UserSchema, user);
-    validator(ChefSchema, chef);
+    // validator(UserSchema, user);
+    // validator(ChefSchema, chef);
+
     const Chef = await ChefModel.create(
         {
             grade,
@@ -73,7 +67,7 @@ const createChef = asynchandler(async (req, res) => {
                 email: email,
                 password: password,
                 profile_image: profile_image
-            }
+            },
         },
         {
             include: [ChefModel.user]
@@ -85,64 +79,96 @@ const createChef = asynchandler(async (req, res) => {
 
 
 
-
-
-
 /**
  * @desc Update a Chef by ID
- * @route PUT /Chefs/:id
+ * @route PATCH /chef/update/:id
  * @access private
  */
+
 const updateChef = asynchandler(async (req, res) => {
     validator(ChefSchema, req.body);
-    const { grade } = req.body;
+
     const { id } = req.params;
-    const Chef = await ChefModel.findByPk(id);
+    const { grade, email, profile_image, password,succursal_id } = req.body;
 
-    if (!Chef) {
-        return res.status(404).json({ message: "Chef not found" });
+    try {
+        // Find the Chef by id
+        const chef = await ChefModel.findByPk(id);
+
+        // If the Chef doesn't exist, return a 404 Not Found response
+        if (!chef) {
+            return res.status(404).json({ error: "Chef not found" });
+        }
+
+        // Check if a user with the same email exists
+        const existingUser = await UserModel.findOne({ where: { email } });
+
+        // If an existing user is found and is not the same as the chef, return a 400 Bad Request response
+        if (existingUser && existingUser.id !== chef.userId) {
+            return res.status(400).json({ error: "Email is already in use" });
+        }
+
+        // Update the Chef's information with the data from the request body
+        chef.grade = grade;
+        chef.succursal_id = succursal_id;
+        chef.save();
+
+        // Update the associated User's information (assuming User has an 'email' field)
+        const user = await UserModel.findByPk(chef.userId);
+        user.email = email;
+        user.profile_image = profile_image;
+
+        // If a new password is provided, hash and update the password
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            user.password = hashedPassword;
+        }
+
+        await user.save();
+        return res.status(200).json(chef);
+    } catch (error) {
+        return res.status(400).json({ error: "Failed to update Chef" });
+
     }
-    Chef.grade = grade;
-
-    await Chef.save();
-
-    return res.status(200).json(Chef);
 });
+
+
 
 /**
  * @desc Delete a Chef by ID
  * @route DELETE /Chef/:id
  * @access private
  */
-const deleteChef = asynchandler(async (req, res) => {
-    const user = await UserModel.findByPk(req.params.id);
+const deleteChef = async (req, res) => {
+    try {
+      const user = await UserModel.findByPk(req.params.id);
 
-    if (!user) {
+      if (!user) {
         return res.status(404).json({ message: "Chef not found" });
-    }
-    const Chef = await ChefModel.findByPk(user.actor_id);
-    const [ChefDestroyResult, userDestroyResult] = await Promise.all([
+      }
+
+      const Chef = await ChefModel.findByPk(user.actor_id);
+      const [ChefDestroyResult, userDestroyResult] = await Promise.all([
         Chef.destroy().catch((error) => {
-            throw error;
-        }), // Handle Chef destroy error
+          throw error;
+        }),
         user.destroy().catch((error) => {
-            throw error;
-        }) // Handle user destroy error
-    ]);
+          throw error;
+        })
+      ]);
 
-    if (ChefDestroyResult === null || userDestroyResult === null) {
-        return res
-            .status(500)
-            .json({ message: "Failed to delete Chef or user" });
+      if (ChefDestroyResult === null || userDestroyResult === null) {
+        return res.status(500).json({ message: "Failed to delete Chef or user" });
+      }
+
+      return res.status(204).send();
+    } catch (error) {
+      // Handle the error here
+      console.error("Error in deleteChef:", error);
+
+      // Send an appropriate error response to the client
+      return res.status(500).json({ message: "Internal server error" });
     }
+  };
 
-    return res.status(204).send();
-});
-
-export {
-    createChef,
-    getAllChefs,
-    getOneChefById,
-    updateChef,
-    deleteChef
-};
+export { createChef, getAllChefs, getOneChefById, updateChef, deleteChef };

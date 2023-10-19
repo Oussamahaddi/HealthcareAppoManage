@@ -2,10 +2,7 @@ import Express  from "express";
 import { Router } from "express";
 
 import {
-  createChef,
-  readChefs,
-  updateChef,
-  DeleteChef
+  createChef, getAllChefs, getOneChefById, updateChef, deleteChef
 } from "../providers/ChefProvider.js";
 
 const router = Router();
@@ -24,7 +21,15 @@ router.post('/create',createChef);
  * @desc // get chefs
  * @access private
  */
-router.get('/get',readChefs);
+router.get('/get',getAllChefs);
+
+
+/**
+ * @desc Get a Chef by ID
+ * @route GET /Chefs/:id
+ * @access private
+ */
+router.get('/get/:id',getOneChefById);
 
 
 /**
@@ -32,7 +37,7 @@ router.get('/get',readChefs);
  * @desc // update chef by id
  * @access private
  */
-router.patch('/put/:id',updateChef);
+router.patch('/update/:id',updateChef);
 
 
 /**
@@ -40,7 +45,7 @@ router.patch('/put/:id',updateChef);
  * @desc // delete chef by id
  * @access private
  */
-router.delete('/delete/:id',DeleteChef);
+router.delete('/delete/:id',deleteChef);
 
 
 
