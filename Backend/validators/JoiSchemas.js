@@ -42,7 +42,8 @@ const UserSchema = Joi.object({
         .min(6)
         .required()
         .messages(customErrorMessages),
-    profile_image: Joi.string().required().messages(customErrorMessages)
+    profile_image: Joi.string().required().messages(customErrorMessages),
+    role : Joi.string().valid("client", "entreprise")
 });
 
 const ExigenceServiceSchema = Joi.object({
@@ -57,7 +58,7 @@ const AdminSchema = Joi.object({
     last_name: Joi.string().max(20).required().messages(customErrorMessages),
     email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org'] } }).messages(customErrorMessages),
     password: Joi.string().min(10).required().messages(customErrorMessages),
-    profile_image: Joi.string().required().messages(customErrorMessages)
+    profile_image: Joi.string().required().messages(customErrorMessages)    
 })
 
 const LoginSchema = Joi.object({
