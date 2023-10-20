@@ -6,7 +6,8 @@ import {
     UserModel,
     TechnicienModel,
     ChefModel,
-    SuccurcalModel
+    SuccurcalModel,
+    ClientEntrModel
 } from "./index.js";
 
 /**
@@ -81,3 +82,18 @@ SuccurcalModel.hasOne(ChefModel, {
     constraints: false,
   });
   ChefModel.belongsTo(SuccurcalModel);
+
+  /**
+ * @type one to one association
+ * @desc store association on property user inside object ClientEntrepriseModel
+ * @access public
+ */
+ClientEntrModel.user = ClientEntrModel.hasOne(UserModel, {
+    foreignKey: "actor_id",
+    constraints: false,
+    scope: { role: "entreprise" }
+});
+UserModel.entreprise = UserModel.belongsTo(ClientEntrModel, {
+    foreignKey: "actor_id",
+    constraints: false
+});

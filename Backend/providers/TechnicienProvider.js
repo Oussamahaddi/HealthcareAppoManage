@@ -2,10 +2,12 @@ import asynchandler from "express-async-handler";
 import {
     UserSchema,
     TechnicienSchema,
+    UserUpdateSchema,
     validator
 } from "../validators/JoiSchemas.js";
 import { TechnicienModel } from "../models/TechnicienModel.js";
 import { UserModel } from "../models/UserModel.js";
+import sequelize from "../config/sequelize.js";
 
 /**
  * @desc Get all Techniciens
@@ -13,10 +15,12 @@ import { UserModel } from "../models/UserModel.js";
  * @access private
  */
 const getAllTechniciens = asynchandler(async (req, res) => {
-    const techniciens = await UserModel.findAll({ include: TechnicienModel });
-    res.status(200).json(techniciens);
+    const technicien = await UserModel.findAll({ include: TechnicienModel });
+    if (!technicien) {
+        throw new Error("Technicien not found");
+    }
+    res.status(200).json(technicien);
 });
-
 
 /**
  * @desc Get a Technicien by ID
@@ -28,7 +32,7 @@ const getOneTechnicienById = asynchandler(async (req, res) => {
         include: TechnicienModel
     });
     if (!technicien) {
-        return res.status(404).json({ message: "Technicien not found" });
+        throw new Error("Technicien not found");
     }
     res.status(200).json(technicien);
 });
@@ -39,7 +43,15 @@ const getOneTechnicienById = asynchandler(async (req, res) => {
  * @access private
  */
 const createTechnicien = asynchandler(async (req, res) => {
-    const { first_name, last_name, email, profile_image, password } = req.body;
+    const {
+        first_name,
+        last_name,
+        email,
+        profile_image,
+        password,
+        dispo,
+        grade
+    } = req.body;
 
     const user = {
         first_name,
@@ -48,8 +60,6 @@ const createTechnicien = asynchandler(async (req, res) => {
         profile_image,
         password
     };
-
-    const { dispo, grade } = req.body;
 
     const tech = {
         dispo,
@@ -84,19 +94,45 @@ const createTechnicien = asynchandler(async (req, res) => {
  * @access private
  */
 const updateTechnicien = asynchandler(async (req, res) => {
-    validator(TechnicienSchema, req.body);
-    const { grade, dispo } = req.body;
     const { id } = req.params;
-    const technicien = await TechnicienModel.findByPk(id);
-
-    if (!technicien) {
-        return res.status(404).json({ message: "Technicien not found" });
+    const technicien = await UserModel.findByPk(id, {
+        include: TechnicienModel
+    });
+    if (!technicien && technicien.role != "technicien") {
+        throw new Error("Technicien not found");
     }
+    console.log(technicien.Technicien.grade);
+    const {
+        grade = technicien.Technicien.grade,
+        dispo = technicien.Technicien.dispo,
+        first_name = technicien.first_name,
+        last_name = technicien.last_name,
+        email = technicien.email,
+        profile_image = technicien.profile_image
+    } = req.body;
+    const tech = {
+        dispo,
+        grade
+    };
+    const user = {
+        first_name,
+        last_name,
+        email,
+        profile_image
+    };
+    validator(TechnicienSchema, tech);
+    validator(UserUpdateSchema, user);
 
-    technicien.grade = grade;
-    technicien.dispo = dispo;
+
+    technicien.Technicien.grade = grade;
+    technicien.Technicien.dispo = dispo;
+    technicien.first_name = first_name;
+    technicien.last_name = last_name;
+    technicien.profile_image = profile_image;
+    technicien.email = email;
 
     await technicien.save();
+    await technicien.Technicien.save();
 
     return res.status(200).json(technicien);
 });
@@ -108,25 +144,37 @@ const updateTechnicien = asynchandler(async (req, res) => {
  */
 const deleteTechnicien = asynchandler(async (req, res) => {
     const user = await UserModel.findByPk(req.params.id);
-
     if (!user) {
-        return res.status(404).json({ message: "Technicien not found" });
+        throw new Error("Technicien not found");
     }
     const technicien = await TechnicienModel.findByPk(user.actor_id);
-    const [technicienDestroyResult, userDestroyResult] = await Promise.all([
-        technicien.destroy().catch((error) => {
-            throw error;
-        }), // Handle technicien destroy error
-        user.destroy().catch((error) => {
-            throw error;
-        }) // Handle user destroy error
-    ]);
-
-    if (technicienDestroyResult === null || userDestroyResult === null) {
-        return res
-            .status(500)
-            .json({ message: "Failed to delete technicien or user" });
+    if (!technicien) {
+        throw new Error("Technicien not found");
     }
+
+    async function deleteRecords() {
+        const t = await sequelize.transaction();
+
+        try {
+            const technicienDestroyResult = await technicien.destroy({
+                transaction: t
+            });
+            const userDestroyResult = await user.destroy({ transaction: t });
+
+            await t.commit();
+            console.log("Transaction committed successfully");
+
+            if (technicienDestroyResult < 1 || userDestroyResult < 1) {
+                throw new Error("Failed to delete technicien or user");
+            }
+        } catch (error) {
+            await t.rollback();
+            console.error("Transaction rolled back due to an error:", error);
+            throw error;
+        }
+    }
+
+    await deleteRecords();
 
     return res.status(204).send();
 });
