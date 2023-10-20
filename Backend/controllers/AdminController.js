@@ -1,8 +1,8 @@
-import expressAsyncHandler from "express-async-handler";
+import asynchandler from "express-async-handler";
 import { AdminSchema, validator } from "../validators/JoiSchemas.js";
-import {UserModel, AdminModel} from "../models/index.js";
-import ROLE_LIST from "../config/Role_list.js";
+import { UserModel, AdminModel } from "../models/index.js";
 import { generateJwt } from "../utils/generateToken.js";
+
 
 
 /**
@@ -11,12 +11,9 @@ import { generateJwt } from "../utils/generateToken.js";
  * @access private
  */
 
-const getAllAdmin = expressAsyncHandler(async (req, res) => {
-    const Admins = await AdminModel.findAll();
-
+const getAllAdmin = asynchandler(async (req, res) => {
+    const Admins = await UserModel.findAll({ include: AdminModel });
     res.status(200).json(Admins);
-    
-    res.json({ status: true })
 })
 
 /**
@@ -25,12 +22,15 @@ const getAllAdmin = expressAsyncHandler(async (req, res) => {
  * @access private
  */
 
-const getOneAdmin = expressAsyncHandler(async (req, res) => {
+const getOneAdmin = asynchandler(async (req, res) => {
     const { id } = req.params;
+    const Admin = await AdminModel.findByPk(id, { include: [UserModel] });
+    if (!Admin) {
+        res.status(401);
+        throw new Error("Admin not found");
+    }
+    res.status(200).json(Admin);
 
-    const Admins = await AdminModel.findByPk(id);
-
-    res.status(200).json(Admins);
 })
 
 /**
@@ -39,28 +39,21 @@ const getOneAdmin = expressAsyncHandler(async (req, res) => {
  * @access private
  */
 
-const CreateAdmin = expressAsyncHandler(async (req, res) => {
-    const error = await validator(AdminSchema, req.body);
-
-    if (error) {
-        return res.status(400).json({ error: error });
-    }
-    let { first_name, last_name, email, password, profile_image, role } = req.body;
-
-    const newUser = await AdminModel.create({
-        user : {
-            first_name: first_name.customTrim(),
-            last_name: last_name.customTrim(),
-            email: email,
-            password: password,
-            profile_image: profile_image
-        }
+const CreateAdmin = asynchandler(async (req, res) => {
+    validator(AdminSchema, req.body);
+    let { first_name, last_name, email, password, profile_image } = req.body;
+    const newUser = await UserModel.create({
+        admin: {},
+        first_name: first_name.customTrim(),
+        last_name: last_name.customTrim(),
+        email: email,
+        password: password,
+        profile_image: profile_image,
+        role: "admin"
     }, {
-        include : [AdminModel.user]
+        include: [UserModel.admin]
     });
-
     newUser.token = generateJwt(res, newUser.id);
-
     res.status(201).json(newUser.token);
 })
 
@@ -70,30 +63,29 @@ const CreateAdmin = expressAsyncHandler(async (req, res) => {
  * @access private
  */
 
-const UpdateAdmin = expressAsyncHandler(async (req, res) => {
-    const error = await validator(AdminSchema, req.body);
-
-    if (error) {
-        return res.status(400).json({ error: error });
-    }
-
+const UpdateAdmin = asynchandler(async (req, res) => {
     const { id } = req.params;
-    const { first_name, last_name, email, password, profile_image } = req.body;
-    const Admin = await UserModel.findByPk(id);
-
+    const Admin = await AdminModel.findByPk(id, { include: [UserModel] });
     if (!Admin) {
-        return res.status(404).json({ error: "Service not found" });
+        res.status(401);
+        throw new Error("admin is not found")
     }
-
-    Admin.first_name = first_name;
-    Admin.last_name = last_name;
-    Admin.email = email;
-    Admin.password = password;
-    Admin.profile_image = profile_image;
-
-    await Admin.save();
-
-    res.status(201).json(Admin);
+    req.body.password = Admin.user.password;
+    validator(AdminSchema, req.body);
+    const { first_name, last_name, email, password, profile_image } = req.body
+    Admin.user.set({
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+        password: password,
+        profile_image: profile_image,
+    })
+    const result = await Admin.user.save();
+    if(!result){
+        res.status(401);
+        throw new Error("is not updated")
+    }
+    res.status(201).json(result)
 })
 
 
@@ -103,18 +95,18 @@ const UpdateAdmin = expressAsyncHandler(async (req, res) => {
  * @access private
  */
 
-const DeleteAdmin = expressAsyncHandler(async (req, res) => {
+const DeleteAdmin = asynchandler(async (req, res) => {
     const { id } = req.params;
-
-    const existingAdmin = await UserModel.findByPk(id);
-
+    const existingAdmin = await AdminModel.findByPk(id,{include:[UserModel]});
     if (!existingAdmin) {
-        return res.status(404).json({ error: "Admin not found" });
+        res.status(401);
+        throw new Error("is not deleted")
     }
-
-    await existingAdmin.destroy();
-
-    res.status(200).json({ message: "Admin deleted successfully" })
+    const result = await existingAdmin.destroy()
+    .then(function(result) {
+       return result.user.destroy();
+    })
+    res.status(201).json()
 })
 
 export { getAllAdmin, getOneAdmin, CreateAdmin, UpdateAdmin, DeleteAdmin }

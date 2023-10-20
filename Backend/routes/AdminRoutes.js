@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { getAllAdmin, getOneAdmin, CreateAdmin, UpdateAdmin, DeleteAdmin } from "../controllers/AdminController.js";
+import { auth } from "../middleware/AuthMiddleware.js";
 
 const router = Router();
 
@@ -10,7 +11,7 @@ const router = Router();
  * @access private
  */
 
-router.get('/', getAllAdmin)
+router.get('/', auth, getAllAdmin)
 
 /**
  * @GET
