@@ -25,7 +25,8 @@ const customErrorMessages = {
  **/
 const SuccurcalSchema = Joi.object({
     title: Joi.string().required().messages(customErrorMessages),
-    description: Joi.string().required().messages(customErrorMessages)
+    description: Joi.string().required().messages(customErrorMessages),
+    services: Joi.array(),
 });
 
 const ServiceSchema = Joi.object({

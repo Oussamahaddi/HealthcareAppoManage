@@ -20,7 +20,7 @@ const getAllService = asynchandler(async (req, res) => {
 /**
  * @desc Get one Service
  * @route GET /Service
- * @access public
+ * @access private
  */
 
 const getOneService = asynchandler(async (req, res) => {

@@ -9,7 +9,7 @@ const sequelize = new Sequelize({
     port: process.env.hostPort,
     username: process.env.user,
     password: process.env.password,
-    database: process.env.database,
+    database: process.env.Test_database
 });
 
 export default sequelize;

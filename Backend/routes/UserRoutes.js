@@ -3,24 +3,25 @@ import { Router } from "express";
 import {
     authUser,
     registerUser,
-    getAllUseres
+    getAllUsers,
+    getOneUser
 } from "../controllers/userController.js";
 
 const router = Router();
 
 /**
  * @GET
- * @desc // get all Succurcals
+ * @desc // get all Users
  * @access public
  */
-router.get("/", getAllUseres);
+router.get("/", getAllUsers);
 
 /**
  * @GET
- * @desc // get one Succurcal
+ * @desc // get one User
  * @access public
  */
-router.get("/:id");
+router.get("/:id", getOneUser);
 
 /**
  * @POST
@@ -31,14 +32,13 @@ router.post("/", registerUser);
 
 /**
  * @PATCH
- * @desc // update a Succurcal
- * @access private
+ * @desc // update a User
  */
 router.patch("/:id");
 
 /**
  * @DELETE
- * @desc // Delete a Succurcal
+ * @desc // Delete a User
  * @access private
  */
 router.delete("/:id");

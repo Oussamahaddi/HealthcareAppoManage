@@ -7,7 +7,8 @@
     "scripts": {
         "start": "node Backend/server.js",
         "server": "nodemon Backend/server.js",
-        "db-setup": "node Backend/config/DbAsync.js"
+        "db-setup": "node Backend/config/DbAsync.js",
+        "test": "jest"
     },
     "repository": {
         "type": "git",
@@ -25,7 +26,9 @@
         "eslint-plugin-import": "^2.28.1",
         "eslint-plugin-n": "^16.2.0",
         "eslint-plugin-promise": "^6.1.1",
-        "nodemon": "^3.0.1"
+        "jest": "^29.7.0",
+        "nodemon": "^3.0.1",
+        "supertest": "^6.3.3"
     },
     "dependencies": {
         "dotenv": "^16.3.1",
@@ -33,6 +36,7 @@
         "express-async-handler": "^1.2.0",
         "joi": "^17.11.0",
         "mysql2": "^3.6.1",
-        "sequelize": "^6.33.0"
+        "sequelize": "^6.33.0",
+        "uuid": "^9.0.1"
     }
 }

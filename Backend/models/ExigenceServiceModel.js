@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
-import ServiceModel from "./ServiceModel.js";
 
 const ExigenceServiceModel = sequelize.define("ExigenceService", {
     id: {
@@ -25,6 +24,12 @@ const ExigenceServiceModel = sequelize.define("ExigenceService", {
     },
     updatedAt: {
         type: DataTypes.DATE
+    }
+});
+
+ExigenceServiceModel.afterFind((result, options) => {
+    if (result == null) {
+        throw new Error("ExigenceService not exist");
     }
 });
 

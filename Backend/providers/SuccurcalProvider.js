@@ -11,6 +11,11 @@ import { SuccurcalSchema, validator } from "../validators/JoiSchemas.js";
  * @access public
  */
 
+/**
+ * Get all Succurcal
+ * @route GET /Succurcal
+ * @access public
+ */
 const getAllSuccurcal = asynchandler(async (req, res) => {
     const Succurcals = await SuccurcalModel.findAll({
         include: ServiceModel
@@ -41,13 +46,27 @@ const getOneSuccurcal = asynchandler(async (req, res) => {
 const CreateSuccurcal = asynchandler(async (req, res) => {
     validator(SuccurcalSchema, req.body);
 
-    const { title, description } = req.body;
-    // create a new SuccurcalModel
-    const Succurcals = await SuccurcalModel.create({
-        title: title.customTrim(),
-        description: description.customTrim()
-    });
-    res.status(201).json(Succurcals);
+    const { title, description, services } = req.body;
+
+    const transaction = await sequelize.transaction();
+    try {
+        const Succurcal = await SuccurcalModel.create({
+            title: title.customTrim(),
+            description: description.customTrim()
+        });
+
+        await Succurcal.setServices(services, { transaction });
+
+        await transaction.commit();
+
+        res.status(201).json({
+            Succurcal,
+            message: "Succurcal created succusfully"
+        });
+    } catch {
+        await transaction.rollback();
+        throw new Error("Error occurred while creating Succurcal");
+    }
 });
 
 /**
@@ -60,25 +79,24 @@ const UpdateSuccurcal = asynchandler(async (req, res) => {
     validator(SuccurcalSchema, req.body);
 
     const { id } = req.params;
-    const { title, description } = req.body;
+    const { title, description, services } = req.body;
 
-    // get Succurcals
-    const Succurcals = await SuccurcalModel.findByPk(id);
+    // Get the Succurcal
+    const Succurcal = await SuccurcalModel.findByPk(id);
 
-    if (!Succurcals) {
-        if (!Succurcals) {
-            throw new Error("Succurcal not found");
-        }
+    if (!Succurcal) {
+        throw new Error("Succurcal not found");
     }
 
-    //update Succurcals
-    Succurcals.title = title.customTrim();
-    Succurcals.description = description.customTrim();
+    Succurcal.title = title.customTrim();
+    Succurcal.description = description.customTrim();
 
-    // save Succurcals
-    await Succurcals.save();
+    await Succurcal.setServices(services);
 
-    res.status(201).json(Succurcals);
+    res.status(200).json({
+        Succurcal,
+        message: "Succurcal updated succesfully."
+    });
 });
 
 /**
@@ -109,34 +127,6 @@ const DeleteSuccurcal = asynchandler(async (req, res) => {
  * @access private
  */
 
-const assignservicesToSuccurcal = asynchandler(async (req, res) => {
-    const Succurcal_id = req.params.id;
-    const { services } = req.body;
-    const Succurcal = await SuccurcalModel.findByPk(Succurcal_id);
-    if (!Succurcal) {
-        return res.status(404).json({ error: "Succurcal not found" });
-    }
-    const transaction = await sequelize.transaction();
-
-    try {
-        for (const serviceId of services) {
-            await SuccurcalServicePivot.create(
-                {
-                    SuccurcalId: Succurcal_id,
-                    ServiceId: serviceId
-                },
-                { transaction: transaction }
-            );
-        }
-        await transaction.commit();
-        res.status(201).json(
-            "assign services To Succurcal created successfully."
-        );
-    } catch {
-        await transaction.rollback();
-        throw new Error("error occurred while assigning services");
-    }
-});
 
 export {
     getAllSuccurcal,

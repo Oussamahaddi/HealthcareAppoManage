@@ -32,9 +32,26 @@ const registerUser = asynchandler(async (req, res) => {
     res.status(201).json(newUser);
 });
 
-const getAllUseres = asynchandler(async (req, res) => {
-    const users = UserModel.findAll();
+/**
+ * @desc get all useres
+ * @route post /user
+ * @access private
+ */
+const getAllUsers = asynchandler(async (req, res) => {
+    const users = await UserModel.findAll();
     res.status(200).json(users);
 });
 
-export { authUser, registerUser, getAllUseres };
+/**
+ * @desc get one user
+ * @route post /user
+ * @access private
+ */
+const getOneUser = asynchandler(async (req, res) => {
+    const { id } = req.params;
+    const user = await UserModel.findByPk(id);
+    console.log(user);
+    res.status(200).json(user);
+});
+
+export { authUser, registerUser, getAllUsers, getOneUser };

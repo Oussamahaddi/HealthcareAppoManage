@@ -2,6 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
 import ExigenceServiceModel from "./ExigenceServiceModel.js";
 
+
 const ServiceModel = sequelize.define("Service", {
     id: {
         type: DataTypes.INTEGER,
@@ -16,15 +17,13 @@ const ServiceModel = sequelize.define("Service", {
     description: {
         type: DataTypes.STRING,
         allowNull: false
-    },
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
+    }
 });
 ServiceModel.hasMany(ExigenceServiceModel);
 ExigenceServiceModel.belongsTo(ServiceModel);
 
 ServiceModel.beforeCreate(async (service, options) => {
-    console.log('test');
+    console.log("test");
     const titleCheckQuery = {
         where: {
             title: service.title
