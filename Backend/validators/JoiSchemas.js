@@ -67,13 +67,25 @@ const LoginSchema = Joi.object({
 })
 
 const TechnicienSchema = Joi.object({
-    dispo: Joi.string().required().messages(customErrorMessages),
+    dispo: Joi.boolean().required().messages(customErrorMessages),
     grade: Joi.string().required().messages(customErrorMessages)
 });
 
 const ChefSchema = Joi.object({
     grade: Joi.string().required().messages(customErrorMessages)
 });
+
+const UserUpdateSchema = Joi.object({
+    first_name: Joi.string().optional().messages(customErrorMessages),
+    last_name: Joi.string().optional().messages(customErrorMessages),
+    email: Joi.string().email().optional().messages(customErrorMessages),
+    profile_image: Joi.string().optional().messages(customErrorMessages),
+});
+
+const EntrepriseSchema = Joi.object({
+    entreprise_id: Joi.string().required().messages(customErrorMessages)
+});
+
 
 /**
  * @HELPER
@@ -100,5 +112,7 @@ export {
     AdminSchema,
     LoginSchema,
     TechnicienSchema,
-    ChefSchema
+    ChefSchema,
+    UserUpdateSchema,
+    EntrepriseSchema
 };
