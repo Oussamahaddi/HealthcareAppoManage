@@ -19,6 +19,7 @@ router.use("/succurcal", auth, Succurcal);
 router.use("/client", Client);
 router.use("/service", Service);
 router.use("/ExigenceService", ExigenceService);
+router.use("/admin",auth, verifyRole(ROLE_LIST.admin), Admin);
 router.use("/chef", Chef);
 router.use("/admin", Admin);
 router.use("/technicien", Technicien);
