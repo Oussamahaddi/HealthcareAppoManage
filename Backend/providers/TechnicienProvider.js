@@ -17,6 +17,7 @@ const getAllTechniciens = asynchandler(async (req, res) => {
     res.status(200).json(techniciens);
 });
 
+
 /**
  * @desc Get a Technicien by ID
  * @route GET /techniciens/:id
@@ -99,6 +100,7 @@ const updateTechnicien = asynchandler(async (req, res) => {
 
     return res.status(200).json(technicien);
 });
+
 /**
  * @desc Delete a Technicien by ID
  * @route DELETE /techniciens/:id

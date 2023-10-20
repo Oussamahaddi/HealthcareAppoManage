@@ -1,5 +1,5 @@
 import sequelize from "../config/sequelize.js";
-import SuccurcalModel from "../models/SuccurcalModel.js";
+import {SuccurcalModel} from "../models/SuccurcalModel.js";
 import ServiceModel from "../models/ServiceModel.js";
 import SuccurcalServicePivot from "../models/SuccurcalServicePivot.js";
 import asynchandler from "express-async-handler";

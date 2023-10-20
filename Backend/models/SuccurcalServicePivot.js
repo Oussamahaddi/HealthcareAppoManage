@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
-import SuccurcalModel from "./SuccurcalModel.js";
 import ServiceModel from "./ServiceModel.js";
+import { SuccurcalModel } from "./SuccurcalModel.js";
 
 const SuccurcalServicePivot = sequelize.define("SuccurcalServicePivot", {});
 SuccurcalModel.belongsToMany(ServiceModel, {

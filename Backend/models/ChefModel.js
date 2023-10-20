@@ -11,8 +11,4 @@ export const ChefModel = sequelize.define('Chef', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  status: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
 });

@@ -1,5 +1,5 @@
 import ServiceModel from "../models/ServiceModel.js";
-import SuccurcalModel from "../models/SuccurcalModel.js";
+import {SuccurcalModel} from "../models/SuccurcalModel.js";
 import asynchandler from "express-async-handler";
 import { ServiceSchema, validator } from "../validators/JoiSchemas.js";
 import ExigenceServiceModel from "../models/ExigenceServiceModel.js";
