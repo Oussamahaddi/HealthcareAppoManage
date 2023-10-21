@@ -55,8 +55,8 @@ const createChef = asynchandler(async (req, res) => {
         succursal_id
     };
 
-    // validator(UserSchema, user);
-    // validator(ChefSchema, chef);
+    validator(UserSchema, user);
+    validator(ChefSchema, chef);
 
     const Chef = await ChefModel.create(
         {

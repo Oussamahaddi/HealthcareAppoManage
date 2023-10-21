@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.get("/", allCompany);
 
-router.post("/register", createCompany);
+router.post("/", createCompany);
 
 export default router;

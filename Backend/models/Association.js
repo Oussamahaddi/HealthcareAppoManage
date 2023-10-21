@@ -9,6 +9,7 @@ import {
     SuccurcalModel,
     ClientEntrModel
 } from "./index.js";
+import ROLE_LIST from "../config/Role_list.js";
 
 /**
  * @models {ClientModel} , {UserModel}
@@ -20,7 +21,7 @@ import {
 ClientModel.user = ClientModel.hasOne(UserModel, {
     foreignKey: "actor_id",
     constraints: false,
-    scope: { role: "client" }
+    scope: { role: ROLE_LIST.client }
 });
 UserModel.client = UserModel.belongsTo(ClientModel, {
     foreignKey: "actor_id",
@@ -37,7 +38,7 @@ UserModel.client = UserModel.belongsTo(ClientModel, {
 AdminModel.user = AdminModel.hasOne(UserModel, {
     foreignKey: "actor_id",
     constraints: false,
-    scope: { role: "admin" }
+    scope: { role: ROLE_LIST.admin }
 });
 UserModel.admin = UserModel.belongsTo(AdminModel, {
     foreignKey: "actor_id",
@@ -54,7 +55,7 @@ UserModel.admin = UserModel.belongsTo(AdminModel, {
 TechnicienModel.user = TechnicienModel.hasOne(UserModel, {
     foreignKey: "actor_id",
     constraints: false,
-    scope: { role: "technicien" }
+    scope: { role: ROLE_LIST.technicin }
 });
 UserModel.technicien = UserModel.belongsTo(TechnicienModel, {
     foreignKey: "actor_id",
@@ -71,7 +72,7 @@ UserModel.technicien = UserModel.belongsTo(TechnicienModel, {
 ChefModel.user = ChefModel.hasOne(UserModel, {
     foreignKey: "actor_id",
     constraints: false,
-    scope: { role: "Chef" }
+    scope: { role: ROLE_LIST.chef }
 });
 UserModel.Chef = UserModel.belongsTo(ChefModel, {
     foreignKey: "actor_id",
@@ -99,7 +100,7 @@ ChefModel.belongsTo(SuccurcalModel);
 ClientEntrModel.user = ClientEntrModel.hasOne(UserModel, {
     foreignKey: "actor_id",
     constraints: false,
-    scope: { role: "entreprise" }
+    scope: { role: ROLE_LIST.entreprise }
 });
 UserModel.entreprise = UserModel.belongsTo(ClientEntrModel, {
     foreignKey: "actor_id",

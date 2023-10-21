@@ -45,8 +45,6 @@ const UserSchema = Joi.object({
         .required()
         .messages(customErrorMessages),
     profile_image: Joi.string().required().messages(customErrorMessages),
-    role: Joi.string().valid("client", "entreprise"),
-    profile_image: Joi.string().required().messages(customErrorMessages),
     role: Joi.string().valid("client", "entreprise")
 });
 
@@ -82,7 +80,8 @@ const TechnicienSchema = Joi.object({
 });
 
 const ChefSchema = Joi.object({
-    grade: Joi.string().required().messages(customErrorMessages)
+    grade: Joi.string().required().messages(customErrorMessages),
+    succursal_id : Joi.number()
 });
 
 const UserUpdateSchema = Joi.object({
@@ -93,7 +92,7 @@ const UserUpdateSchema = Joi.object({
 });
 
 const EntrepriseSchema = Joi.object({
-    entreprise_id: Joi.string().required().messages(customErrorMessages)
+    companyName: Joi.string().required().messages(customErrorMessages)
 });
 
 /**

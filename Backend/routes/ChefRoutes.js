@@ -13,7 +13,7 @@ const router = Router();
  * @desc // create new chef
  * @access private
  */
-router.post('/create',createChef);
+router.post('/',createChef);
 
 
 /**
