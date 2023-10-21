@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-const ExigenceServiceModel = sequelize.define("ExigenceService", {
+export const ExigenceServiceModel = sequelize.define("ExigenceService", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -32,5 +32,3 @@ ExigenceServiceModel.afterFind((result, options) => {
         throw new Error("ExigenceService not exist");
     }
 });
-
-export default ExigenceServiceModel;

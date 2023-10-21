@@ -1,7 +1,8 @@
 import sequelize from "../config/sequelize.js";
-import SuccurcalModel from "../models/SuccurcalModel.js";
-import ServiceModel from "../models/ServiceModel.js";
-import SuccurcalServicePivot from "../models/SuccurcalServicePivot.js";
+import { SuccurcalModel } from "../models/SuccurcalModel.js";
+import { ServiceModel } from "../models/ServiceModel.js";
+import { ChefModel } from "../models/ChefModel.js";
+import { UserModel } from "../models/UserModel.js";
 import asynchandler from "express-async-handler";
 import { SuccurcalSchema, validator } from "../validators/JoiSchemas.js";
 
@@ -18,7 +19,13 @@ import { SuccurcalSchema, validator } from "../validators/JoiSchemas.js";
  */
 const getAllSuccurcal = asynchandler(async (req, res) => {
     const Succurcals = await SuccurcalModel.findAll({
-        include: ServiceModel
+        include: [
+            ServiceModel,
+            {
+                model: ChefModel,
+                include: [UserModel]
+            }
+        ]
     });
     res.status(200).json(Succurcals);
 });
@@ -32,7 +39,7 @@ const getAllSuccurcal = asynchandler(async (req, res) => {
 const getOneSuccurcal = asynchandler(async (req, res) => {
     const { id } = req.params;
     const Succurcals = await SuccurcalModel.findByPk(id, {
-        include: ServiceModel
+        include: [ServiceModel, UserModel]
     });
     res.status(200).json(Succurcals);
 });
@@ -46,27 +53,32 @@ const getOneSuccurcal = asynchandler(async (req, res) => {
 const CreateSuccurcal = asynchandler(async (req, res) => {
     validator(SuccurcalSchema, req.body);
 
-    const { title, description, services } = req.body;
+    const { title, description, services = [], chef = null } = req.body;
 
-    const transaction = await sequelize.transaction();
-    try {
-        const Succurcal = await SuccurcalModel.create({
-            title: title.customTrim(),
-            description: description.customTrim()
-        });
+    const titleCheckQuery = {
+        where: {
+            title: title
+        }
+    };
+    const SuccurcalExistes = await SuccurcalModel.findOne(titleCheckQuery);
 
-        await Succurcal.setServices(services, { transaction });
-
-        await transaction.commit();
-
-        res.status(201).json({
-            Succurcal,
-            message: "Succurcal created succusfully"
-        });
-    } catch {
-        await transaction.rollback();
-        throw new Error("Error occurred while creating Succurcal");
+    if (SuccurcalExistes) {
+        throw new Error("Succurcal already exist");
     }
+
+    const Succurcal = await SuccurcalModel.create({
+        title: title.customTrim(),
+        description: description.customTrim()
+    });
+
+    await Succurcal.setServices(services);
+
+    await Succurcal.setChef(chef);
+
+    res.status(201).json({
+        Succurcal,
+        message: "Succurcal created succusfully"
+    });
 });
 
 /**
@@ -127,12 +139,10 @@ const DeleteSuccurcal = asynchandler(async (req, res) => {
  * @access private
  */
 
-
 export {
     getAllSuccurcal,
     getOneSuccurcal,
     CreateSuccurcal,
     UpdateSuccurcal,
-    DeleteSuccurcal,
-    assignservicesToSuccurcal
+    DeleteSuccurcal
 };

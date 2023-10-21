@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-const SuccurcalModel = sequelize.define("Succurcal", {
+export const SuccurcalModel = sequelize.define("Succurcal", {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -17,19 +17,3 @@ const SuccurcalModel = sequelize.define("Succurcal", {
     }
 });
 
-SuccurcalModel.beforeCreate(async (succurcal, options) => {
-    const titleCheckQuery = {
-        where: {
-            title: succurcal.title
-        }
-    };
-    const SuccurcalExistes = await SuccurcalModel.findOne(titleCheckQuery);
-
-    if (SuccurcalExistes) {
-        throw new Error("Succurcal already exist");
-    }
-});
-
-
-
-export default SuccurcalModel;

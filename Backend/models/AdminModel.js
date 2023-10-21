@@ -1,10 +1,11 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
 
-export const ClientModel = sequelize.define("clients", {
+
+export const AdminModel = sequelize.define('admins', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
-    }
+    },
 });
