@@ -31,46 +31,45 @@ const createCompany = asynchandler(async (req, res) => {
         email,
         password,
         profile_image,
-        entreprise_id
+        companyName,
+        role
     } = req.body;
 
     const entreprise = {
-        entreprise_id
+        companyName
     }
     const user = {
         first_name,
         last_name,
         email,
         profile_image,
-        password
+        password,
+        role
     };
 
     validator(UserSchema, user);
     validator(EntrepriseSchema, entreprise);
 
 
-    const Client = await ClientEntrModel.create(
+    const newUser = await ClientEntrModel.create(
         {
-            entreprise_id,
-            user: {
+            companyName : companyName,
+            user : {
                 first_name: first_name,
                 last_name: last_name,
                 email: email,
                 password: password,
-                profile_image: profile_image
+                profile_image: profile_image,
             }
+            
         },
         {
             include: [ClientEntrModel.user]
         }
     );
-    const newUser = await UserModel.findOne({
-        where: { actor_id: Client.id },
-        include: [ClientEntrModel]
-    });
 
     if (!newUser) throw new Error("Can't create user for some reason");
-    newUser.token = generateJwt(res, newUser.id, newUser.role);
+    newUser.token = generateJwt(res, newUser.id, newUser.user.role);
     res.status(201).json({ token: newUser.token });
 });
 

@@ -8,6 +8,7 @@ import {
 import { TechnicienModel } from "../models/TechnicienModel.js";
 import { UserModel } from "../models/UserModel.js";
 import sequelize from "../config/sequelize.js";
+import ROLE_LIST from "../config/Role_list.js";
 
 /**
  * @desc Get all Techniciens
@@ -15,7 +16,7 @@ import sequelize from "../config/sequelize.js";
  * @access private
  */
 const getAllTechniciens = asynchandler(async (req, res) => {
-    const technicien = await UserModel.findAll({ include: TechnicienModel });
+    const technicien = await UserModel.findAll({where: {role : ROLE_LIST.technicin}}, { include: TechnicienModel });
     if (!technicien) {
         throw new Error("Technicien not found");
     }

@@ -2,6 +2,7 @@ import asynchandler from "express-async-handler";
 import {ClientModel, UserModel} from "../models/index.js";
 import { validator, UserSchema } from "../validators/JoiSchemas.js";
 import { generateJwt } from "../utils/generateToken.js";
+import ROLE_LIST from "../config/Role_list.js";
 
 
 /**
@@ -11,14 +12,14 @@ import { generateJwt } from "../utils/generateToken.js";
  */
 
 const allClient = asynchandler( async(req, res) => {
-    const client = await UserModel.findAll({where: {role : 'client'}, include : [ClientModel]});
+    const client = await UserModel.findAll({where: {role : ROLE_LIST.client}, include : [ClientModel]});
     if (!client) throw new Error("No client Found");
     res.status(200).json(client);
 })
 
 /**
- * @desc Get all client
- * @route GET /client
+ * @desc Create a client
+ * @route POST /client
  * @access public
  */
 
