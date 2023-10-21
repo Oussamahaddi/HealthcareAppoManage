@@ -1,5 +1,5 @@
-import ExigenceServiceModel from "../models/ExigenceServiceModel.js";
-import ServiceModel from "../models/ServiceModel.js";
+import {ExigenceServiceModel} from "../models/ExigenceServiceModel.js";
+import {ServiceModel} from "../models/ServiceModel.js";
 import asynchandler from "express-async-handler";
 import { ExigenceServiceSchema, validator } from "../validators/JoiSchemas.js";
 

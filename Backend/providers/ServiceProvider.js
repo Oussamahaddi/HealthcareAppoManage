@@ -1,8 +1,8 @@
-import ServiceModel from "../models/ServiceModel.js";
+import {ServiceModel} from "../models/ServiceModel.js";
 import {SuccurcalModel} from "../models/SuccurcalModel.js";
 import asynchandler from "express-async-handler";
 import { ServiceSchema, validator } from "../validators/JoiSchemas.js";
-import ExigenceServiceModel from "../models/ExigenceServiceModel.js";
+import {ExigenceServiceModel} from "../models/ExigenceServiceModel.js";
 
 /**
  * @desc Get all Succurcal
@@ -20,7 +20,7 @@ const getAllService = asynchandler(async (req, res) => {
 /**
  * @desc Get one Service
  * @route GET /Service
- * @access public
+ * @access private
  */
 
 const getOneService = asynchandler(async (req, res) => {

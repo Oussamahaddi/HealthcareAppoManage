@@ -25,7 +25,9 @@ const customErrorMessages = {
  **/
 const SuccurcalSchema = Joi.object({
     title: Joi.string().required().messages(customErrorMessages),
-    description: Joi.string().required().messages(customErrorMessages)
+    description: Joi.string().required().messages(customErrorMessages),
+    services: Joi.array(),
+    chef: Joi.number()
 });
 
 const ServiceSchema = Joi.object({
@@ -43,7 +45,9 @@ const UserSchema = Joi.object({
         .required()
         .messages(customErrorMessages),
     profile_image: Joi.string().required().messages(customErrorMessages),
-    role : Joi.string().valid("client", "entreprise")
+    role: Joi.string().valid("client", "entreprise"),
+    profile_image: Joi.string().required().messages(customErrorMessages),
+    role: Joi.string().valid("client", "entreprise")
 });
 
 const ExigenceServiceSchema = Joi.object({
@@ -56,15 +60,21 @@ const ExigenceServiceSchema = Joi.object({
 const AdminSchema = Joi.object({
     first_name: Joi.string().max(20).required().messages(customErrorMessages),
     last_name: Joi.string().max(20).required().messages(customErrorMessages),
-    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org'] } }).messages(customErrorMessages),
+    email: Joi.string()
+        .required()
+        .email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "org"] } })
+        .messages(customErrorMessages),
     password: Joi.string().min(10).required().messages(customErrorMessages),
-    profile_image: Joi.string().required().messages(customErrorMessages)    
-})
+    profile_image: Joi.string().required().messages(customErrorMessages)
+});
 
 const LoginSchema = Joi.object({
-    email : Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org'] } }).messages(customErrorMessages),
-    password : Joi.string().required().messages(customErrorMessages)
-})
+    email: Joi.string()
+        .required()
+        .email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "org"] } })
+        .messages(customErrorMessages),
+    password: Joi.string().required().messages(customErrorMessages)
+});
 
 const TechnicienSchema = Joi.object({
     dispo: Joi.boolean().required().messages(customErrorMessages),
@@ -79,13 +89,12 @@ const UserUpdateSchema = Joi.object({
     first_name: Joi.string().optional().messages(customErrorMessages),
     last_name: Joi.string().optional().messages(customErrorMessages),
     email: Joi.string().email().optional().messages(customErrorMessages),
-    profile_image: Joi.string().optional().messages(customErrorMessages),
+    profile_image: Joi.string().optional().messages(customErrorMessages)
 });
 
 const EntrepriseSchema = Joi.object({
     entreprise_id: Joi.string().required().messages(customErrorMessages)
 });
-
 
 /**
  * @HELPER
