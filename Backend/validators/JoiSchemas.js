@@ -45,6 +45,8 @@ const UserSchema = Joi.object({
         .required()
         .messages(customErrorMessages),
     profile_image: Joi.string().required().messages(customErrorMessages),
+    role: Joi.string().valid("client", "entreprise"),
+    profile_image: Joi.string().required().messages(customErrorMessages),
     role: Joi.string().valid("client", "entreprise")
 });
 

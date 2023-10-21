@@ -16,4 +16,3 @@ export const SuccurcalModel = sequelize.define("Succurcal", {
         allowNull: false
     }
 });
-

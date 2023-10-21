@@ -7,9 +7,9 @@ export const ClientEntrModel = sequelize.define("clientEntreprise", {
         primaryKey: true,
         autoIncrement: true
     },
-    // entreprise_id: {
-    //     type: DataTypes.STRING,
-    //     unique: true,
-    //     allowNull: false
-    // }
+    entreprise_id: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false
+    }
 });

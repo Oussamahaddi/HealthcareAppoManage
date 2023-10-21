@@ -3,6 +3,8 @@ import { UserSchema, ChefSchema, validator } from "../validators/JoiSchemas.js";
 import { ChefModel } from "../models/ChefModel.js";
 import { UserModel } from "../models/UserModel.js";
 
+
+
 /**
  * @desc Get all Chefs
  * @route GET /Chefs
@@ -12,6 +14,8 @@ const getAllChefs = asynchandler(async (req, res) => {
     const Chefs = await UserModel.findAll({ include: ChefModel });
     res.status(200).json(Chefs);
 });
+
+
 
 /**
  * @desc Get a Chef by ID
@@ -28,21 +32,15 @@ const getOneChefById = asynchandler(async (req, res) => {
     res.status(200).json(Chef);
 });
 
+
+
 /**
  * @desc Create a new Chef
  * @route POST /chef/create
  * @access private
  */
 const createChef = asynchandler(async (req, res) => {
-    const {
-        first_name,
-        last_name,
-        email,
-        profile_image,
-        password,
-        grade,
-        succursal_id
-    } = req.body;
+    const { first_name, last_name, email, profile_image, password, grade ,succursal_id  } = req.body;
 
     const user = {
         first_name,
@@ -69,7 +67,7 @@ const createChef = asynchandler(async (req, res) => {
                 email: email,
                 password: password,
                 profile_image: profile_image
-            }
+            },
         },
         {
             include: [ChefModel.user]
@@ -78,6 +76,8 @@ const createChef = asynchandler(async (req, res) => {
 
     return res.status(201).json(Chef);
 });
+
+
 
 /**
  * @desc Update a Chef by ID
@@ -89,7 +89,7 @@ const updateChef = asynchandler(async (req, res) => {
     validator(ChefSchema, req.body);
 
     const { id } = req.params;
-    const { grade, email, profile_image, password, succursal_id } = req.body;
+    const { grade, email, profile_image, password,succursal_id } = req.body;
 
     try {
         // Find the Chef by id
@@ -128,8 +128,11 @@ const updateChef = asynchandler(async (req, res) => {
         return res.status(200).json(chef);
     } catch (error) {
         return res.status(400).json({ error: "Failed to update Chef" });
+
     }
 });
+
+
 
 /**
  * @desc Delete a Chef by ID
@@ -138,36 +141,34 @@ const updateChef = asynchandler(async (req, res) => {
  */
 const deleteChef = async (req, res) => {
     try {
-        const user = await UserModel.findByPk(req.params.id);
+      const user = await UserModel.findByPk(req.params.id);
 
-        if (!user) {
-            return res.status(404).json({ message: "Chef not found" });
-        }
+      if (!user) {
+        return res.status(404).json({ message: "Chef not found" });
+      }
 
-        const Chef = await ChefModel.findByPk(user.actor_id);
-        const [ChefDestroyResult, userDestroyResult] = await Promise.all([
-            Chef.destroy().catch((error) => {
-                throw error;
-            }),
-            user.destroy().catch((error) => {
-                throw error;
-            })
-        ]);
+      const Chef = await ChefModel.findByPk(user.actor_id);
+      const [ChefDestroyResult, userDestroyResult] = await Promise.all([
+        Chef.destroy().catch((error) => {
+          throw error;
+        }),
+        user.destroy().catch((error) => {
+          throw error;
+        })
+      ]);
 
-        if (ChefDestroyResult === null || userDestroyResult === null) {
-            return res
-                .status(500)
-                .json({ message: "Failed to delete Chef or user" });
-        }
+      if (ChefDestroyResult === null || userDestroyResult === null) {
+        return res.status(500).json({ message: "Failed to delete Chef or user" });
+      }
 
-        return res.status(204).send();
+      return res.status(204).send();
     } catch (error) {
-        // Handle the error here
-        console.error("Error in deleteChef:", error);
+      // Handle the error here
+      console.error("Error in deleteChef:", error);
 
-        // Send an appropriate error response to the client
-        return res.status(500).json({ message: "Internal server error" });
+      // Send an appropriate error response to the client
+      return res.status(500).json({ message: "Internal server error" });
     }
-};
+  };
 
 export { createChef, getAllChefs, getOneChefById, updateChef, deleteChef };
