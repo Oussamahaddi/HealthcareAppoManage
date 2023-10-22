@@ -8,4 +8,5 @@ export * from "./TechnicienModel.js";
 export * from "./ChefModel.js";
 export * from "./ClientEntrepriseModel.js";
 export * from "./ReservationModel.js"
+export * from "./ReclamationModel.js"
 import "./Association.js";

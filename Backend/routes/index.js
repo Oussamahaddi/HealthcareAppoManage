@@ -8,7 +8,8 @@ import Technicien from "./TechnicienRoutes.js";
 import Chef from "./ChefRoutes.js";
 import Login from "./LoginRoutes.js";
 import Company from "./ClientEntrepriseRoutes.js";
-import Reservation from "./ReservationRouter.js";
+import Reservation from "./ReservationRoutes.js";
+import Reclamation from "./ReclmationRoutes.js";
 import ROLE_LIST from "../config/Role_list.js";
 import { verifyRole } from "../middleware/verifyRole.js";
 import { auth } from "../middleware/AuthMiddleware.js";
@@ -24,6 +25,7 @@ router.use("/chef", Chef);
 router.use("/admin", Admin);
 router.use("/technicien", Technicien);
 router.use("/company", Company);
-router.use("/reservation", auth, Reservation)
+router.use("/reservation", auth, Reservation);
+router.use("/reclamation", auth, Reclamation);
 
 export default router;

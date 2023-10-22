@@ -3,6 +3,7 @@ import { UserSchema, ChefSchema, validator } from "../validators/JoiSchemas.js";
 import { ChefModel } from "../models/ChefModel.js";
 import { UserModel } from "../models/UserModel.js";
 import { generateJwt } from "../utils/generateToken.js";
+import ROLE_LIST from "../config/Role_list.js";
 
 
 
@@ -12,7 +13,8 @@ import { generateJwt } from "../utils/generateToken.js";
  * @access private
  */
 const getAllChefs = asynchandler(async (req, res) => {
-    const Chefs = await UserModel.findAll({ include: ChefModel });
+    const Chefs = await UserModel.scope('withoutPassword').findAll({where : {role : ROLE_LIST.chef}},{ include: ChefModel });
+    if (!Chefs) throw new Error("No Chef found");
     res.status(200).json(Chefs);
 });
 

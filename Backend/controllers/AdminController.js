@@ -12,7 +12,7 @@ import { generateJwt } from "../utils/generateToken.js";
  */
 
 const getAllAdmin = asynchandler(async (req, res) => {
-    const Admins = await UserModel.findAll({ include: AdminModel });
+    const Admins = await UserModel.scope('withoutPassword').findAll({ include: AdminModel });
     res.status(200).json(Admins);
 })
 

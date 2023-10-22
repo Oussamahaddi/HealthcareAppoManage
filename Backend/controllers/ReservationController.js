@@ -10,7 +10,7 @@ import { ReservationModel, ClientEntrModel, ClientModel, SuccurcalModel, UserMod
  */
 
 const getAllReservation = asynchandler(async (req, res) => {
-    const reservations = await ReservationModel.findAll({include : [UserModel]});
+    const reservations = await ReservationModel.findAll({include : [UserModel.scope("withoutPassword")]});
     if (!reservations) throw new Error("No reservation found");
     res.status(200).json(reservations);
 })
@@ -33,8 +33,6 @@ const createReservation = asynchandler(async (req, res) => {
     const reserved = await ReservationModel.create({
         userId : req.user.actorId,
         SuccurcalId : succurcalId,
-    }, {
-        include : [ReservationModel.succurcal]
     });
 
     if (!reserved) throw new Error ("Something wrong while reservation");

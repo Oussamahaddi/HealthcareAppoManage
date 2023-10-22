@@ -11,6 +11,7 @@ import {
 } from "./index.js";
 import ROLE_LIST from "../config/Role_list.js";
 import { ReservationModel } from "./ReservationModel.js";
+import { ReclamationModel } from "./ReclamationModel.js";
 
 /**
  * @models {ClientModel} , {UserModel}
@@ -56,7 +57,7 @@ UserModel.admin = UserModel.belongsTo(AdminModel, {
 TechnicienModel.user = TechnicienModel.hasOne(UserModel, {
     foreignKey: "actor_id",
     constraints: false,
-    scope: { role: ROLE_LIST.technicin }
+    scope: { role: ROLE_LIST.technicien }
 });
 UserModel.technicien = UserModel.belongsTo(TechnicienModel, {
     foreignKey: "actor_id",
@@ -135,7 +136,7 @@ ServiceModel.hasMany(ExigenceServiceModel, {
 ExigenceServiceModel.belongsTo(ServiceModel);
 
 /**
- * @models {ReservationModel} , {ClientModel}
+ * @models {ReservationModel} , {UserModel}
  * @type one to many association {Association}
  * @desc store association on property inside object clientModel
  * @access private
@@ -151,7 +152,7 @@ UserModel.reservation = UserModel.hasMany(ReservationModel, {
 ReservationModel.user = ReservationModel.belongsTo(UserModel);
 
 /**
- * @models {ReservationModel} , {ClientEntrModel}
+ * @models {ReservationModel} , {SuccurcalModel}
  * @type one to many association {Association}
  * @desc store association on property inside object clientEnteModel
  * @access private
@@ -165,3 +166,35 @@ SuccurcalModel.reservation = SuccurcalModel.hasMany(ReservationModel, {
     onUpdate : "CASCADE",
 });
 ReservationModel.succurcal = ReservationModel.belongsTo(SuccurcalModel);
+
+/**
+ * @models {ReclamationModel} , {UserModel}
+ * @type one to many association {Association}
+ * @desc store association on property inside object clientEnteModel
+ * @access private
+ */
+
+UserModel.reclamation = UserModel.hasMany(ReclamationModel, {
+    foreignKey : {
+        allowNull : false,
+    },
+    onDelete : "CASCADE",
+    onUpdate : "CASCADE",
+});
+ReclamationModel.user = ReclamationModel.belongsTo(UserModel);
+
+/**
+ * @models {ReclamationModel} , {TechnicienModel}
+ * @type one to many association {Association}
+ * @desc store association on property inside object clientEnteModel
+ * @access private
+ */
+
+TechnicienModel.reclamation = TechnicienModel.hasMany(ReclamationModel, {
+    foreignKey : {
+        allowNull : false,
+    },
+    onDelete : "CASCADE",
+    onUpdate : "CASCADE",
+});
+ReclamationModel.technicien = ReclamationModel.belongsTo(UserModel);

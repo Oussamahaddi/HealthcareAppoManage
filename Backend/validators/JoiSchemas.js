@@ -98,6 +98,12 @@ const ReservationSchema = Joi.object({
     succurcalId : Joi.number().required().messages(customErrorMessages),
 });
 
+const ReclamationSchema = Joi.object({
+    description : Joi.string().required().messages(customErrorMessages),
+    level : Joi.string().valid("hard", "low"),
+    TechnicienId : Joi.number().required().messages(customErrorMessages)
+});
+
 /**
  * @HELPER
  * @type function
@@ -126,5 +132,6 @@ export {
     ChefSchema,
     UserUpdateSchema,
     EntrepriseSchema,
-    ReservationSchema
+    ReservationSchema,
+    ReclamationSchema
 };

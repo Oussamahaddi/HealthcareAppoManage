@@ -15,7 +15,7 @@ import sequelize from "../config/sequelize.js";
  * @access private
  */
 const getAllTechniciens = asynchandler(async (req, res) => {
-    const technicien = await TechnicienModel.findAll({ include: UserModel });
+    const technicien = await TechnicienModel.findAll({ include: UserModel.scope("withoutPassword") });
     if (!technicien) {
         throw new Error("Technicien not found");
     }

@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/sequelize.js";
 import bcrypt from "bcrypt";
+import ROLE_LIST from "../config/Role_list.js";
 
 export const UserModel = sequelize.define("users", {
     id: {
@@ -38,6 +39,17 @@ export const UserModel = sequelize.define("users", {
     },
     actor_id : {
         type : DataTypes.INTEGER,
+    },
+}, {
+    scopes: {
+        withoutPassword: {
+            attributes: { exclude: ['password'] },
+        },
+        client : {
+            where : {
+                role : ROLE_LIST.client,
+            }
+        }
     }
 });
 

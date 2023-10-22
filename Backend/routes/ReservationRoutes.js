@@ -11,7 +11,7 @@ const router = Router();
  * @access private
  */
 
-router.get("/", verifyRole(ROLE_LIST.admin), getAllReservation);
+router.get("/", getAllReservation);
 
 /**
  * @POST

@@ -1,6 +1,6 @@
 const ROLE_LIST = {
     client : "client",
-    technicin : "technicien",
+    technicien : "technicien",
     chef : "chef",
     entreprise : "entreprise",
     admin : "admin",
