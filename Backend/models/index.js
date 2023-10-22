@@ -7,4 +7,5 @@ export * from "./ClientModel.js";
 export * from "./TechnicienModel.js";
 export * from "./ChefModel.js";
 export * from "./ClientEntrepriseModel.js";
+export * from "./ReservationModel.js"
 import "./Association.js";

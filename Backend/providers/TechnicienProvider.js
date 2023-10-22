@@ -29,8 +29,8 @@ const getAllTechniciens = asynchandler(async (req, res) => {
  * @access private
  */
 const getOneTechnicienById = asynchandler(async (req, res) => {
-    const technicien = await UserModel.findByPk(req.params.id, {
-        include: TechnicienModel
+    const technicien = await TechnicienModel.findByPk(req.params.id, {
+        include: UserModel
     });
     if (!technicien) {
         throw new Error("Technicien not found");

@@ -10,6 +10,7 @@ import {
     ClientEntrModel
 } from "./index.js";
 import ROLE_LIST from "../config/Role_list.js";
+import { ReservationModel } from "./ReservationModel.js";
 
 /**
  * @models {ClientModel} , {UserModel}
@@ -132,3 +133,35 @@ ServiceModel.hasMany(ExigenceServiceModel, {
     onDelete: "CASCADE"
 });
 ExigenceServiceModel.belongsTo(ServiceModel);
+
+/**
+ * @models {ReservationModel} , {ClientModel}
+ * @type one to many association {Association}
+ * @desc store association on property inside object clientModel
+ * @access private
+ */
+
+UserModel.reservation = UserModel.hasMany(ReservationModel, {
+    foreignKey : {
+        allowNull : false,
+    },
+    onDelete : "CASCADE",
+    onUpdate : "CASCADE",
+});
+ReservationModel.user = ReservationModel.belongsTo(UserModel);
+
+/**
+ * @models {ReservationModel} , {ClientEntrModel}
+ * @type one to many association {Association}
+ * @desc store association on property inside object clientEnteModel
+ * @access private
+ */
+
+SuccurcalModel.reservation = SuccurcalModel.hasMany(ReservationModel, {
+    foreignKey : {
+        allowNull : false,
+    },
+    onDelete : "CASCADE",
+    onUpdate : "CASCADE",
+});
+ReservationModel.succurcal = ReservationModel.belongsTo(SuccurcalModel);

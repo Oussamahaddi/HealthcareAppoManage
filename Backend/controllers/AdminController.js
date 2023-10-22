@@ -58,7 +58,7 @@ const CreateAdmin = asynchandler(async (req, res) => {
         include: [AdminModel.user]
     });
     if (!newUser) throw new Error("Something wrong while creation of admin");
-    newUser.token = generateJwt(res, newUser.id);
+    newUser.token = generateJwt(res, newUser.id, newUser.user.role);
     res.status(201).json(newUser.token);
 })
 

@@ -94,6 +94,10 @@ const EntrepriseSchema = Joi.object({
     companyName: Joi.string().required().messages(customErrorMessages)
 });
 
+const ReservationSchema = Joi.object({
+    succurcalId : Joi.number().required().messages(customErrorMessages),
+});
+
 /**
  * @HELPER
  * @type function
@@ -121,5 +125,6 @@ export {
     TechnicienSchema,
     ChefSchema,
     UserUpdateSchema,
-    EntrepriseSchema
+    EntrepriseSchema,
+    ReservationSchema
 };
