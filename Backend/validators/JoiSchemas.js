@@ -1,5 +1,6 @@
 import Joi from "joi";
 
+
 /**
  * @HELPER
  * @type object
@@ -80,7 +81,7 @@ const TechnicienSchema = Joi.object({
 
 const ChefSchema = Joi.object({
     grade: Joi.string().required().messages(customErrorMessages),
-    succursal_id : Joi.required().messages(customErrorMessages)
+    succursal_id: Joi.required().messages(customErrorMessages)
 });
 
 const UserUpdateSchema = Joi.object({
@@ -94,6 +95,14 @@ const EntrepriseSchema = Joi.object({
     companyName: Joi.string().required().messages(customErrorMessages)
 });
 
+const EmployeSchema = Joi.object({
+    fullName: Joi.string().required().messages(customErrorMessages),
+    email: Joi.string()
+    .required()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "org"] } })
+    .messages(customErrorMessages),
+    companyId: Joi.string().required().messages(customErrorMessages)
+});
 /**
  * @HELPER
  * @type function
@@ -121,5 +130,6 @@ export {
     TechnicienSchema,
     ChefSchema,
     UserUpdateSchema,
-    EntrepriseSchema
+    EntrepriseSchema,
+    EmployeSchema
 };

@@ -7,7 +7,8 @@ import {
     TechnicienModel,
     ChefModel,
     SuccurcalModel,
-    ClientEntrModel
+    ClientEntrModel,
+    EmployeModels,
 } from "./index.js";
 import ROLE_LIST from "../config/Role_list.js";
 
@@ -132,3 +133,17 @@ ServiceModel.hasMany(ExigenceServiceModel, {
     onDelete: "CASCADE"
 });
 ExigenceServiceModel.belongsTo(ServiceModel);
+
+
+/**
+ * @models {ClientEntrModel} , {EmployeModels}
+ * @type one to many association {Association}
+ * @desc 
+ * @access private
+ */
+
+
+ClientEntrModel.hasMany(EmployeModels, {
+    constraints: false
+});
+EmployeModels.belongsTo(ClientEntrModel);
