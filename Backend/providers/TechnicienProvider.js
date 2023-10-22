@@ -8,7 +8,6 @@ import {
 import { TechnicienModel } from "../models/TechnicienModel.js";
 import { UserModel } from "../models/UserModel.js";
 import sequelize from "../config/sequelize.js";
-import ROLE_LIST from "../config/Role_list.js";
 
 /**
  * @desc Get all Techniciens
@@ -16,7 +15,7 @@ import ROLE_LIST from "../config/Role_list.js";
  * @access private
  */
 const getAllTechniciens = asynchandler(async (req, res) => {
-    const technicien = await UserModel.findAll({where: {role : ROLE_LIST.technicin}}, { include: TechnicienModel });
+    const technicien = await TechnicienModel.findAll({ include: UserModel });
     if (!technicien) {
         throw new Error("Technicien not found");
     }
@@ -29,8 +28,8 @@ const getAllTechniciens = asynchandler(async (req, res) => {
  * @access private
  */
 const getOneTechnicienById = asynchandler(async (req, res) => {
-    const technicien = await UserModel.findByPk(req.params.id, {
-        include: TechnicienModel
+    const technicien = await TechnicienModel.findByPk(req.params.id, {
+        include: UserModel
     });
     if (!technicien) {
         throw new Error("Technicien not found");
@@ -44,14 +43,8 @@ const getOneTechnicienById = asynchandler(async (req, res) => {
  * @access private
  */
 const createTechnicien = asynchandler(async (req, res) => {
-    const {
-        first_name,
-        last_name,
-        email,
-        profile_image,
-        password,
-        dispo
-    } = req.body;
+    const { first_name, last_name, email, profile_image, password, dispo } =
+        req.body;
 
     const user = {
         first_name,
@@ -68,7 +61,12 @@ const createTechnicien = asynchandler(async (req, res) => {
     validator(UserSchema, user);
     validator(TechnicienSchema, tech);
 
-    if (!first_name.customTrim() || !last_name.customTrim() || !email.customTrim() || !password.customTrim())
+    if (
+        !first_name.customTrim() ||
+        !last_name.customTrim() ||
+        !email.customTrim() ||
+        !password.customTrim()
+    )
         throw new Error("The fields should not be empty");
 
     const technicien = await TechnicienModel.create(
@@ -86,7 +84,8 @@ const createTechnicien = asynchandler(async (req, res) => {
             include: [TechnicienModel.user]
         }
     );
-    if (!technicien) throw new Error("Something wrong while creation of technicien !!!!");
+    if (!technicien)
+        throw new Error("Something wrong while creation of technicien !!!!");
 
     return res.status(201).json(technicien);
 });
@@ -99,26 +98,24 @@ const createTechnicien = asynchandler(async (req, res) => {
 const updateTechnicien = asynchandler(async (req, res) => {
     const { id } = req.params;
 
-    const technicien = await UserModel.findByPk(id, {
-        include: TechnicienModel
+    const technicien = await TechnicienModel.findByPk(id, {
+        include: UserModel
     });
 
-    if (!technicien && technicien.role != "technicien") {
+    if (!technicien) {
         throw new Error("Technicien not found");
     }
-
+    console.log(technicien.user);
     const {
-        grade = technicien.Technicien.grade,
         dispo = technicien.Technicien.dispo,
-        first_name = technicien.first_name,
-        last_name = technicien.last_name,
-        email = technicien.email,
-        profile_image = technicien.profile_image
+        first_name = technicien.user.first_name,
+        last_name = technicien.user.last_name,
+        email = technicien.user.email,
+        profile_image = technicien.user.profile_image
     } = req.body;
 
     const tech = {
-        dispo,
-        grade
+        dispo
     };
 
     const user = {
@@ -127,22 +124,24 @@ const updateTechnicien = asynchandler(async (req, res) => {
         email,
         profile_image
     };
-
+    console.log(user);
     validator(TechnicienSchema, tech);
     validator(UserUpdateSchema, user);
 
-    if (!first_name.customTrim() || !last_name.customTrim() || !email.customTrim()) 
-        throw new Error("The fields should not be empty")
+    if (
+        !first_name.customTrim() ||
+        !last_name.customTrim() ||
+        !email.customTrim()
+    )
+        throw new Error("The fields should not be empty");
 
-    technicien.Technicien.grade = grade;
-    technicien.Technicien.dispo = dispo;
-    technicien.first_name = first_name;
-    technicien.last_name = last_name;
-    technicien.profile_image = profile_image;
-    technicien.email = email;
+    technicien.dispo = dispo;
+    technicien.user.first_name = first_name;
+    technicien.user.last_name = last_name;
+    technicien.user.profile_image = profile_image;
+    technicien.user.email = email;
 
     await technicien.save();
-    await technicien.Technicien.save();
 
     return res.status(200).json(technicien);
 });
