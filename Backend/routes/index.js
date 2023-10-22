@@ -10,6 +10,7 @@ import Login from "./LoginRoutes.js";
 import Company from "./ClientEntrepriseRoutes.js";
 import Reservation from "./ReservationRoutes.js";
 import Reclamation from "./ReclmationRoutes.js";
+import Employe from "./EmployeRoutes.js"
 import ROLE_LIST from "../config/Role_list.js";
 import { verifyRole } from "../middleware/verifyRole.js";
 import { auth } from "../middleware/AuthMiddleware.js";
@@ -27,5 +28,6 @@ router.use("/technicien", Technicien);
 router.use("/company", Company);
 router.use("/reservation", auth, Reservation);
 router.use("/reclamation", auth, Reclamation);
+router.use("/employe", Employe);
 
 export default router;
