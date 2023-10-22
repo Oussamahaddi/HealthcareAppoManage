@@ -42,11 +42,15 @@ const CreateService = asynchandler(async (req, res) => {
 
     const { title, description } = req.body;
 
+    if (!title.customTrim() || !description.customTrim()) 
+        throw new Error("The fields should not be empty")
+
     // create a new ServiceModel
     const Services = await ServiceModel.create({
         title: title.customTrim(),
         description: description.customTrim()
     });
+    if (!Services) throw new Error("Something wrong while creating service");
     res.status(201).json(Services);
 });
 
@@ -61,6 +65,9 @@ const UpdateService = asynchandler(async (req, res) => {
 
     const { id } = req.params;
     const { title, description } = req.body;
+
+    if (!title.customTrim() || !description.customTrim()) 
+        throw new Error("The fields should not be empty")
 
     // get Services
     const Services = await ServiceModel.findByPk(id);

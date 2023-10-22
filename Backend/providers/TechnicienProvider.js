@@ -50,8 +50,7 @@ const createTechnicien = asynchandler(async (req, res) => {
         email,
         profile_image,
         password,
-        dispo,
-        grade
+        dispo
     } = req.body;
 
     const user = {
@@ -63,16 +62,18 @@ const createTechnicien = asynchandler(async (req, res) => {
     };
 
     const tech = {
-        dispo,
-        grade
+        dispo
     };
 
     validator(UserSchema, user);
     validator(TechnicienSchema, tech);
+
+    if (!first_name.customTrim() || !last_name.customTrim() || !email.customTrim() || !password.customTrim())
+        throw new Error("The fields should not be empty");
+
     const technicien = await TechnicienModel.create(
         {
             dispo,
-            grade,
             user: {
                 first_name: first_name.customTrim(),
                 last_name: last_name.customTrim(),
@@ -85,6 +86,7 @@ const createTechnicien = asynchandler(async (req, res) => {
             include: [TechnicienModel.user]
         }
     );
+    if (!technicien) throw new Error("Something wrong while creation of technicien !!!!");
 
     return res.status(201).json(technicien);
 });
@@ -96,13 +98,15 @@ const createTechnicien = asynchandler(async (req, res) => {
  */
 const updateTechnicien = asynchandler(async (req, res) => {
     const { id } = req.params;
+
     const technicien = await UserModel.findByPk(id, {
         include: TechnicienModel
     });
+
     if (!technicien && technicien.role != "technicien") {
         throw new Error("Technicien not found");
     }
-    console.log(technicien.Technicien.grade);
+
     const {
         grade = technicien.Technicien.grade,
         dispo = technicien.Technicien.dispo,
@@ -111,19 +115,24 @@ const updateTechnicien = asynchandler(async (req, res) => {
         email = technicien.email,
         profile_image = technicien.profile_image
     } = req.body;
+
     const tech = {
         dispo,
         grade
     };
+
     const user = {
         first_name,
         last_name,
         email,
         profile_image
     };
+
     validator(TechnicienSchema, tech);
     validator(UserUpdateSchema, user);
 
+    if (!first_name.customTrim() || !last_name.customTrim() || !email.customTrim()) 
+        throw new Error("The fields should not be empty")
 
     technicien.Technicien.grade = grade;
     technicien.Technicien.dispo = dispo;

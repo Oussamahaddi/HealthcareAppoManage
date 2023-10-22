@@ -42,17 +42,22 @@ const getOneAdmin = asynchandler(async (req, res) => {
 const CreateAdmin = asynchandler(async (req, res) => {
     validator(AdminSchema, req.body);
     let { first_name, last_name, email, password, profile_image } = req.body;
-    const newUser = await UserModel.create({
-        admin: {},
-        first_name: first_name.customTrim(),
-        last_name: last_name.customTrim(),
-        email: email,
-        password: password,
-        profile_image: profile_image,
-        role: "admin"
+
+    if (!first_name.customTrim() || !last_name.customTrim() || !email.customTrim() || !password.customTrim()) 
+        throw new Error("The fields should not be empty")
+
+    const newUser = await AdminModel.create({
+        user: {
+            first_name: first_name.customTrim(),
+            last_name: last_name.customTrim(),
+            email: email,
+            password: password,
+            profile_image: profile_image,
+        }
     }, {
-        include: [UserModel.admin]
+        include: [AdminModel.user]
     });
+    if (!newUser) throw new Error("Something wrong while creation of admin");
     newUser.token = generateJwt(res, newUser.id);
     res.status(201).json(newUser.token);
 })

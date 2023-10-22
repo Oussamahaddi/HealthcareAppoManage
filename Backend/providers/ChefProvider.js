@@ -2,6 +2,7 @@ import asynchandler from "express-async-handler";
 import { UserSchema, ChefSchema, validator } from "../validators/JoiSchemas.js";
 import { ChefModel } from "../models/ChefModel.js";
 import { UserModel } from "../models/UserModel.js";
+import { generateJwt } from "../utils/generateToken.js";
 
 
 
@@ -40,7 +41,7 @@ const getOneChefById = asynchandler(async (req, res) => {
  * @access private
  */
 const createChef = asynchandler(async (req, res) => {
-    const { first_name, last_name, email, profile_image, password, grade ,succursal_id  } = req.body;
+    const { first_name, last_name, email, profile_image, password, grade ,succursal_id = null } = req.body;
 
     const user = {
         first_name,
@@ -58,9 +59,13 @@ const createChef = asynchandler(async (req, res) => {
     validator(UserSchema, user);
     validator(ChefSchema, chef);
 
+    if (!first_name.customTrim() || !last_name.customTrim() || !email.customTrim() || !password.customTrim() || !grade.customTrim()) 
+        throw new Error("The fields should not be empty")
+
     const Chef = await ChefModel.create(
         {
-            grade,
+            grade : grade,
+            SuccurcalId : succursal_id,
             user: {
                 first_name: first_name.customTrim(),
                 last_name: last_name.customTrim(),
@@ -74,7 +79,10 @@ const createChef = asynchandler(async (req, res) => {
         }
     );
 
-    return res.status(201).json(Chef);
+    if (!chef) throw new Error("Chef didnt created successfully !!!!!");
+    const token = generateJwt(res, Chef.id, Chef.user.role);
+
+    return res.status(201).json({chef : Chef, token : token});
 });
 
 

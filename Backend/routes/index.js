@@ -15,7 +15,7 @@ import { auth } from "../middleware/AuthMiddleware.js";
 const router = express.Router();
 
 router.use("/login", Login);
-router.use("/succurcal", auth, Succurcal);
+router.use("/succurcal", Succurcal);
 router.use("/client", Client);
 router.use("/service", Service);
 router.use("/ExigenceService", ExigenceService);

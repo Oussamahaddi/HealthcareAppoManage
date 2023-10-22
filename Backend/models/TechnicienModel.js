@@ -10,7 +10,6 @@ export const TechnicienModel = sequelize.define("Technicien", {
     dispo: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
-    },
-    grade: DataTypes.STRING
+    }
 });
 

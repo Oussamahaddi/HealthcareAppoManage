@@ -55,21 +55,14 @@ const CreateSuccurcal = asynchandler(async (req, res) => {
 
     const { title, description, services = [], chef = null } = req.body;
 
-    const titleCheckQuery = {
-        where: {
-            title: title
-        }
-    };
-    const SuccurcalExistes = await SuccurcalModel.findOne(titleCheckQuery);
-
-    if (SuccurcalExistes) {
-        throw new Error("Succurcal already exist");
-    }
+    if (!title.customTrim() || !description.customTrim()) throw new Error("The fields should not be empty")
 
     const Succurcal = await SuccurcalModel.create({
         title: title.customTrim(),
         description: description.customTrim()
     });
+
+    if (!Succurcal) throw new Error ("Something wrong");
 
     await Succurcal.setServices(services);
 
@@ -104,6 +97,8 @@ const UpdateSuccurcal = asynchandler(async (req, res) => {
     Succurcal.description = description.customTrim();
 
     await Succurcal.setServices(services);
+
+    Succurcal.save();
 
     res.status(200).json({
         Succurcal,
