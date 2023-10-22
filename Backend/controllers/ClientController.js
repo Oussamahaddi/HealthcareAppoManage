@@ -12,7 +12,7 @@ import ROLE_LIST from "../config/Role_list.js";
  */
 
 const allClient = asynchandler( async(req, res) => {
-    const client = await UserModel.findAll({where: {role : ROLE_LIST.client}, include : [ClientModel]});
+    const client = await UserModel.scope('withoutPassword').findAll({where: {role : ROLE_LIST.client}, include : [ClientModel]});
     if (!client) throw new Error("No client Found");
     res.status(200).json(client);
 })

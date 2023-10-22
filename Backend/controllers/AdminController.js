@@ -12,7 +12,7 @@ import { generateJwt } from "../utils/generateToken.js";
  */
 
 const getAllAdmin = asynchandler(async (req, res) => {
-    const Admins = await UserModel.findAll({ include: AdminModel });
+    const Admins = await UserModel.scope('withoutPassword').findAll({ include: AdminModel });
     if(!Admins){
         throw new Error("not fond admins")
     }
@@ -61,7 +61,7 @@ const CreateAdmin = asynchandler(async (req, res) => {
         include: [AdminModel.user]
     });
     if (!newUser) throw new Error("Something wrong while creation of admin");
-    newUser.token = generateJwt(res, newUser.id);
+    newUser.token = generateJwt(res, newUser.id, newUser.user.role);
     res.status(201).json(newUser.token);
 })
 
