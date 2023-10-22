@@ -12,3 +12,8 @@ export const ChefModel = sequelize.define('Chef', {
     allowNull: false,
   },
 });
+
+ChefModel.beforeCreate(async (chef, option) => {
+  const chefExist = await ChefModel.findOne({where : {SuccurcalId : chef.SuccurcalId}});
+  if (chefExist) throw new Error ("Cheff already has a Succurcal !!!");
+})

@@ -29,10 +29,13 @@ const createClient = asynchandler(async (req, res) => {
 
     let { first_name, last_name, email, password, profile_image } = req.body;
 
+    if (!first_name.customTrim() || !last_name.customTrim() || !email.customTrim() || !password.customTrim()) 
+        throw new Error("The fields should not be empty")
+
     const newUser = await UserModel.create({
         first_name: first_name.customTrim(),
         last_name: last_name.customTrim(),
-        email: email,
+        email: email.customTrim(),
         password: password,
         profile_image: profile_image,
         client : {}

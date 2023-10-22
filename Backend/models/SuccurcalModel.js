@@ -16,3 +16,16 @@ export const SuccurcalModel = sequelize.define("Succurcal", {
         allowNull: false
     }
 });
+
+SuccurcalModel.beforeCreate(async (succurcal, options) => {
+    const titleCheckQuery = {
+        where: {
+            title: succurcal.title
+        }
+    };
+    const succurcalExistes = await SuccurcalModel.findOne(titleCheckQuery);
+
+    if (succurcalExistes) {
+        throw new Error("Succurcal already exist");
+    }
+});

@@ -51,7 +51,7 @@ const UserSchema = Joi.object({
 const ExigenceServiceSchema = Joi.object({
     typeInput: Joi.string().required().messages(customErrorMessages),
     title: Joi.string().required().messages(customErrorMessages),
-    required: Joi.string().required().messages(customErrorMessages),
+    required: Joi.boolean().required().messages(customErrorMessages),
     serviceId: Joi.required().messages(customErrorMessages)
 });
 
@@ -75,13 +75,12 @@ const LoginSchema = Joi.object({
 });
 
 const TechnicienSchema = Joi.object({
-    dispo: Joi.boolean().required().messages(customErrorMessages),
-    grade: Joi.string().required().messages(customErrorMessages)
+    dispo: Joi.boolean().required().messages(customErrorMessages)
 });
 
 const ChefSchema = Joi.object({
     grade: Joi.string().required().messages(customErrorMessages),
-    succursal_id : Joi.number()
+    succursal_id : Joi.required().messages(customErrorMessages)
 });
 
 const UserUpdateSchema = Joi.object({

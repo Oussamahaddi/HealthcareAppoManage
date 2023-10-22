@@ -13,6 +13,7 @@ const getAllExigenceService = asynchandler(async (req, res) => {
     const ExigenceService = await ExigenceServiceModel.findAll({
         include: ServiceModel
     });
+    if (!ExigenceService) throw new Error("No Exigence found");
     res.status(200).json(ExigenceService);
 });
 
@@ -27,6 +28,7 @@ const getOneExigenceService = asynchandler(async (req, res) => {
     const ExigenceService = await ExigenceServiceModel.findByPk(id, {
         include: ServiceModel
     });
+    if (!ExigenceService) throw new Error("No ExigenceService found");
     res.status(200).json(ExigenceService);
 });
 
@@ -41,6 +43,9 @@ const CreateExigenceService = asynchandler(async (req, res) => {
 
     const { typeInput, title, required, serviceId } = req.body;
 
+    if (!title.customTrim() || !typeInput.customTrim()) 
+        throw new Error("The fields should not be empty")
+
     // create a new ExigenceService
     const ExigenceService = await ExigenceServiceModel.create({
         typeInput: typeInput,
@@ -48,6 +53,7 @@ const CreateExigenceService = asynchandler(async (req, res) => {
         required: required,
         ServiceId: serviceId
     });
+    if (!ExigenceService) throw new Error("Something wrong while creation of Exigence");
     res.status(201).json(ExigenceService);
 });
 
